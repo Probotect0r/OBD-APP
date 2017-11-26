@@ -27,6 +27,7 @@ public class BluetoothThread extends Thread {
     // mmBuffer store for the stream
     private byte[] mmBuffer;
 
+    private boolean continuePolling = true;
 
     String command = "010c\r";
     public BluetoothThread(BluetoothDevice device) {
@@ -35,18 +36,14 @@ public class BluetoothThread extends Thread {
     }
 
     public void run() {
-        // Set up connection
-        InputStream tmpIn = null;
-        OutputStream tmpOut = null;
-
+        // Set up socket
         try {
             this.bluetoothSocket = this.bluetoothDevice.createRfcommSocketToServiceRecord(SERIAL_UUID);
         } catch (IOException err) {
             Log.e(TAG, "Error creating socket", err);
         }
 
-        // Get the input and output streams; using temp objects because
-        // member streams are final.
+        // Get the input and output streams
         try {
             this.inputStream = this.bluetoothSocket.getInputStream();
         } catch (IOException e) {
@@ -58,25 +55,39 @@ public class BluetoothThread extends Thread {
             Log.e(TAG, "Error occurred when creating output stream", e);
         }
 
+        // Connect to socket
         try {
             this.bluetoothSocket.connect();
             Log.d(TAG, "Connected.");
-
-
         } catch (IOException err) {
             Log.e(TAG, "Error connecting to device", err);
             return;
         }
 
         // Start polling the device
-        while(true) {
-            this.write(this.command.getBytes());
-            String message = this.getString();
+        while(this.continuePolling) {
+            // Write the command
+            try {
+                this.write(this.command.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "Error writing data: ", e);
+                break;
+            }
+
+            String message = null;
+            try {
+                message = this.getString();
+            } catch (IOException e) {
+                Log.e("Error rawdata: ", e.toString());
+                break;
+            }
+
             Log.d(TAG, message);
 
             // Sleep for a bit
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Log.e(TAG, "Error putting thread to sleeep: " + e);
                 e.printStackTrace();
@@ -84,20 +95,11 @@ public class BluetoothThread extends Thread {
         }
     }
 
-    public void cancel() {
-        try {
-            bluetoothSocket.close();
-        } catch (IOException err) {
-            System.out.println("Error closing thread: " + err);
-        }
-    }
-
-    public String getString() {
+    public String getString() throws IOException {
         StringBuilder res = new StringBuilder();
 
-        // Keep listening to the InputStream until an exception occurs.
+        // Keep reading from the InputStream until the end of the message is reached
         while (true) {
-            try {
                 // Read one byte from the InputStream
                 byte b = (byte) inputStream.read();
 
@@ -108,18 +110,11 @@ public class BluetoothThread extends Thread {
                 if (((char) b) != ' ') {
                     res.append((char) b);
                 }
-            } catch (IOException e) {
-                Log.e("Error rawdata: ", e.toString());
-            }
         }
     }
 
-    public void write(byte[] bytes) {
-        try {
+    public void write(byte[] bytes) throws  IOException {
             outputStream.write(bytes);
             outputStream.flush();
-        } catch (IOException e) {
-            Log.e(TAG, "Error occurred when sending data", e);
-        }
     }
 }

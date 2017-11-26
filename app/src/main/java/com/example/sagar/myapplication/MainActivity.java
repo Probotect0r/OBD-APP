@@ -23,9 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
         // Check if bluetooth is enabled
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -43,17 +40,17 @@ public class MainActivity extends AppCompatActivity {
 
     //UI Activities
     public void showFuelActivity(View view) {
-        Intent showFuelActivity = new Intent (this, fuel.class);
+        Intent showFuelActivity = new Intent (this, FuelActivity.class);
         startActivity(showFuelActivity);
     }
 
     public void showTempActivity(View view) {
-        Intent showFuelActivity = new Intent (this, temprature.class);
+        Intent showFuelActivity = new Intent (this, TemperatureActivity.class);
         startActivity(showFuelActivity);
     }
 
     public void showSpeedActivity(View view) {
-        Intent showFuelActivity = new Intent (this, speedRpm.class);
+        Intent showFuelActivity = new Intent (this, SpeedRPMActivity.class);
         startActivity(showFuelActivity);
     }
 

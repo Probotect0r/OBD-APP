@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-public class speedRpm extends AppCompatActivity {
+public class SpeedRPMActivity extends AppCompatActivity {
     TextView speed, rpm;
     double kmh = 105, revloutions = 3000;
 
