@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class temprature extends AppCompatActivity {
+public class TemperatureActivity extends AppCompatActivity {
 
     ImageView img;
     TextView value;

@@ -14,7 +14,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 
-public class fuel extends AppCompatActivity {
+public class FuelActivity extends AppCompatActivity {
 
     private static final String TAG = "FuelActivity";
     LineChart chart;
