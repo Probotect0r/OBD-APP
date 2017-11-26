@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -44,7 +45,7 @@ public class fuel extends AppCompatActivity {
         LineDataSet dataSet = new LineDataSet(yValues, "Data");
         dataSet.setLineWidth(3);
         dataSet.setValueTextSize(0);
-
+        dataSet.setDrawFilled(true);
         dataSet.setCircleColor(Color.BLACK);
         dataSet.setCircleRadius(4);
         dataSet.setCircleHoleRadius(3);
@@ -58,9 +59,9 @@ public class fuel extends AppCompatActivity {
         //complete data preparation for graph
         LineData data = new LineData(dataSets);
 
-        //set data to the chart
+        //draw data to the chart
         chart.setData(data);
-
+        chart.animateX(2000, Easing.EasingOption.EaseInCubic);
     }
     //return back to the home dash
     public void backToHome(View view) {
