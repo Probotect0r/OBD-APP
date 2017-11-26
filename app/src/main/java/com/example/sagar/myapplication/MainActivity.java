@@ -2,7 +2,6 @@ package com.example.sagar.myapplication;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        // Set up bluetooth
+        // Check if bluetooth is enabled
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (!bluetoothAdapter.isEnabled()) {
@@ -39,23 +35,8 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, 1);
         } else {
             // Bluetooth already enabled
-            System.out.println("Bluetooth already enabled. Querying paired devices.");
+            this.setupBluetoothConnection();
 
-            Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-
-            if (pairedDevices.size() > 0) {
-                for (BluetoothDevice device : pairedDevices) {
-                    String deviceName = device.getName();
-                    Log.d(TAG, device.getName());
-
-                    if (deviceName.equals("DESKTOP-46PD4HS")) {
-                        // Connect to this device
-                        Log.d(TAG,"Connecting to " + deviceName);
-                        BluetoothThread thread = new BluetoothThread(device);
-                        thread.start();
-                    }
-                }
-            }
         }
 
     }
@@ -105,12 +86,26 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Bluetooth not enabled.");
         } else {
             System.out.println("Bluetooth enabled!");
+            this.setupBluetoothConnection();
         }
     }
 
     public void setupBluetoothConnection() {
+        Set<BluetoothDevice> pairedDevices = this.bluetoothAdapter.getBondedDevices();
 
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                String deviceName = device.getName();
+                Log.d(TAG, deviceName);
+
+                if (deviceName.equals("DESKTOP-46PD4HS")) {
+                    // Connect to this device
+                    Log.d(TAG,"Connecting to " + deviceName);
+                    BluetoothThread thread = new BluetoothThread(device);
+                    thread.start();
+                }
+            }
+        }
     }
-
 }
 

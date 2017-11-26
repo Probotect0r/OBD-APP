@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 
 public class BluetoothThread extends Thread {
-    // bluetooth serial port service
+    // The UUID of the SerialPort bluetooth service
     UUID SERIAL_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
     private static final String TAG = "MY_APP_DEBUG_TAG";
