@@ -9,6 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
 /**
  * Created by sagar on 11/25/17.
  */
@@ -24,15 +30,23 @@ public class BluetoothThread extends Thread {
     private InputStream inputStream;
     private OutputStream outputStream;
 
-    // mmBuffer store for the stream
-    private byte[] mmBuffer;
-
     private boolean continuePolling = true;
 
+    private Retrofit retrofit;
+    private PostService postService;
+
+    private static final String API_ADDRESS = "192.168.0.17";
     String command = "010c\r";
     public BluetoothThread(BluetoothDevice device) {
         this.bluetoothDevice = device;
 
+        // Set up Rest Service
+        this.retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + this.API_ADDRESS + ":8080/")
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build();
+
+        this.postService = retrofit.create(PostService.class);
     }
 
     public void run() {
@@ -83,7 +97,23 @@ public class BluetoothThread extends Thread {
                 break;
             }
 
-            Log.d(TAG, message);
+            Log.d(TAG, "Message from bluetooth: " + message);
+
+            // Send the message to the server
+            RawMessage rawMessage = new RawMessage(message);
+            Call<RawMessage> call = this.postService.createMessage(rawMessage);
+            call.enqueue(new Callback<RawMessage>() {
+                @Override
+                public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {
+                    Log.d(TAG, "Response from server: " + response.body().rawMessage);
+                }
+
+                @Override
+                public void onFailure(Call<RawMessage> call, Throwable t) {
+                    Log.e(TAG, "Error sending message to server: " + t);
+                }
+            });
+
 
             // Sleep for a bit
             try {
@@ -116,5 +146,13 @@ public class BluetoothThread extends Thread {
     public void write(byte[] bytes) throws  IOException {
             outputStream.write(bytes);
             outputStream.flush();
+    }
+
+    public boolean isContinuePolling() {
+        return continuePolling;
+    }
+
+    public synchronized void setContinuePolling(boolean continuePolling) {
+        this.continuePolling = continuePolling;
     }
 }

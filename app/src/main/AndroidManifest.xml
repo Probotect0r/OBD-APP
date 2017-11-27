@@ -3,6 +3,7 @@
     package="com.example.sagar.myapplication">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +24,7 @@
         </activity>
         <activity android:name=".FuelActivity" />
         <activity android:name=".TemperatureActivity" />
-        <activity android:name=".SpeedRPMActivity"></activity>
+        <activity android:name=".RPM.SpeedRPMActivity"></activity>
     </application>
 
 </manifest>

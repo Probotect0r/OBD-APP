@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.sagar.myapplication.RPM.SpeedRPMActivity;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private UUID uuid = UUID.randomUUID();
     private static final String TAG = "MY_APP_DEBUG_TAG";
+
+    private BluetoothThread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +102,17 @@ public class MainActivity extends AppCompatActivity {
                 if (deviceName.equals("DESKTOP-46PD4HS")) {
                     // Connect to this device
                     Log.d(TAG,"Connecting to " + deviceName);
-                    BluetoothThread thread = new BluetoothThread(device);
-                    thread.start();
+                    this.thread = new BluetoothThread(device);
+                    this.thread.start();
                 }
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.thread.setContinuePolling(false);
     }
 }
 
