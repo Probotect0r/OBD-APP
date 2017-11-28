@@ -7,6 +7,9 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -36,7 +39,10 @@ public class BluetoothThread extends Thread {
     private PostService postService;
 
     private static final String API_ADDRESS = "192.168.0.17";
-    String command = "010c\r";
+//    private static final String API_ADDRESS = "138.197.167.62";
+
+    private static final List<String> COMMANDS = new ArrayList<>(Arrays.asList("010C\r", "0104\r", "010D\r"));
+
     public BluetoothThread(BluetoothDevice device) {
         this.bluetoothDevice = device;
 
@@ -72,7 +78,7 @@ public class BluetoothThread extends Thread {
         // Connect to socket
         try {
             this.bluetoothSocket.connect();
-            Log.d(TAG, "Connected.");
+            Log.d(TAG, "Connected to OBD.");
         } catch (IOException err) {
             Log.e(TAG, "Error connecting to device", err);
             return;
@@ -80,40 +86,46 @@ public class BluetoothThread extends Thread {
 
         // Start polling the device
         while(this.continuePolling) {
-            // Write the command
-            try {
-                this.write(this.command.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e(TAG, "Error writing data: ", e);
-                break;
-            }
+            // Loop through each command
+            for (String command : COMMANDS) {
+                Log.d(TAG, "Processing command: " + command);
 
-            String message = null;
-            try {
-                message = this.getString();
-            } catch (IOException e) {
-                Log.e("Error rawdata: ", e.toString());
-                break;
-            }
-
-            Log.d(TAG, "Message from bluetooth: " + message);
-
-            // Send the message to the server
-            RawMessage rawMessage = new RawMessage(message);
-            Call<RawMessage> call = this.postService.createMessage(rawMessage);
-            call.enqueue(new Callback<RawMessage>() {
-                @Override
-                public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {
-                    Log.d(TAG, "Response from server: " + response.body().rawMessage);
+                // Write the command to the sensor
+                try {
+                    this.write(command.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Error writing data: ", e);
+                    break;
                 }
 
-                @Override
-                public void onFailure(Call<RawMessage> call, Throwable t) {
-                    Log.e(TAG, "Error sending message to server: " + t);
+                // Get the response
+                String message = null;
+                try {
+                    message = this.getString();
+                } catch (IOException e) {
+                    Log.e("Error rawdata: ", e.toString());
+                    break;
                 }
-            });
+                Log.d(TAG, "Message from bluetooth: " + message);
 
+
+                // Send the message to the server
+                RawMessage rawMessage = new RawMessage(message);
+                Call<RawMessage> call = this.postService.createMessage(rawMessage);
+                call.enqueue(new Callback<RawMessage>() {
+                    @Override
+                    public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {
+                        Log.d(TAG, "Response code from server: " + response.code());
+                    }
+
+                    @Override
+                    public void onFailure(Call<RawMessage> call, Throwable t) {
+                        Log.e(TAG, "Error sending message to server: " + t);
+                    }
+                });
+
+            }
 
             // Sleep for a bit
             try {
