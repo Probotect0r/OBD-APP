@@ -19,7 +19,10 @@ public class FuelActivity extends AppCompatActivity {
     private static final String TAG = "FuelActivity";
     LineChart chart;
 
-
+    // Dataset
+    LineDataSet dataSet;
+    // Data
+    LineData data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +45,7 @@ public class FuelActivity extends AppCompatActivity {
         yValues.add(new Entry(6, 60));
 
         //Line for connecting the dots and design
-        LineDataSet dataSet = new LineDataSet(yValues, "Data");
+        dataSet = new LineDataSet(yValues, "Data");
         dataSet.setLineWidth(3);
         dataSet.setValueTextSize(0);
         dataSet.setDrawFilled(true);
@@ -57,11 +60,40 @@ public class FuelActivity extends AppCompatActivity {
         dataSets.add(dataSet);
 
         //complete data preparation for graph
-        LineData data = new LineData(dataSets);
+        data = new LineData(dataSets);
 
         //draw data to the chart
         chart.setData(data);
         chart.animateX(2000, Easing.EasingOption.EaseInCubic);
+
+        Thread pollingThread = new Thread() {
+
+            @Override
+            public void run() {
+                System.out.println("Started polling thread.");
+                int[] values = new int[]{80, 90, 85, 110, 120, 130, 110, 100, 95, 105};
+                for (int i = 0; i < 7; i++) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    dataSet.removeEntry(0);
+                    dataSet.addEntry(new Entry(i + 7, values[i]));
+                    chart.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            data.notifyDataChanged();
+                            chart.notifyDataSetChanged();
+                            chart.invalidate();
+                        }
+                    });
+
+                }
+            }
+        };
+
+        pollingThread.start();
     }
     //return back to the home dash
     public void backToHome(View view) {

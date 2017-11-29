@@ -38,8 +38,8 @@ public class BluetoothThread extends Thread {
     private Retrofit retrofit;
     private PostService postService;
 
-    private static final String API_ADDRESS = "192.168.0.17";
-//    private static final String API_ADDRESS = "138.197.167.62";
+//    private static final String API_ADDRESS = "192.168.0.17";
+    private static final String API_ADDRESS = "138.197.167.62";
 
     private static final List<String> COMMANDS = new ArrayList<>(Arrays.asList("010C\r", "0104\r", "010D\r"));
 
