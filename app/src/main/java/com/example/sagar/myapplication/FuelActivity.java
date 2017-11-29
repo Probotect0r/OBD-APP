@@ -14,15 +14,17 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 
+import retrofit2.Retrofit;
+
 public class FuelActivity extends AppCompatActivity {
 
     private static final String TAG = "FuelActivity";
     LineChart chart;
 
-    // Dataset
-    LineDataSet dataSet;
-    // Data
-    LineData data;
+    private LineDataSet dataSet;
+    private LineData data;
+
+    private Retrofit retrofit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

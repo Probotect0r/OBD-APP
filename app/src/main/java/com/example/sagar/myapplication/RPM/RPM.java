@@ -6,7 +6,7 @@ package com.example.sagar.myapplication.RPM;
 
 public class RPM {
     private String type;
-    private int value;
+    private int rpm;
     private String timestamp;
 
     public String getType() {
@@ -17,12 +17,12 @@ public class RPM {
         this.type = type;
     }
 
-    public int getValue() {
-        return value;
+    public int getRpm() {
+        return rpm;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setRpm(int rpm) {
+        this.rpm = rpm;
     }
 
     public String getTimestamp() {
