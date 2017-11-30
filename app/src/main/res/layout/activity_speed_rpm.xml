@@ -27,39 +27,24 @@
             />
     </android.support.design.widget.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="66dp"
-        app:srcCompat="@drawable/rpm"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="95dp" />
-
     <TextView
         android:id="@+id/speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/appbar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:text="Speed:"
+        android:layout_marginTop="39dp"
+        android:text="Speed"
         android:textAlignment="center"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="143dp"
         tools:layout_editor_absoluteY="484dp" />
 
-    <TextView
-        android:id="@+id/rpm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/speed"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:text="RPM:"
-        android:textAlignment="center"
-        android:textSize="24sp" />
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/speedLineChart"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"></com.github.mikephil.charting.charts.LineChart>
 
 </RelativeLayout>
