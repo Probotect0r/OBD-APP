@@ -1,7 +1,5 @@
 package com.example.sagar.myapplication.EngineLoad;
 
-import com.example.sagar.myapplication.RPM.RpmMessage;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,9 +10,9 @@ import retrofit2.http.GET;
  */
 
 public interface EngineLoadService {
-    @GET("rpm")
-    Call<List<LoadMessage>> rpmList();
+    @GET("load")
+    Call<List<LoadMessage>> loadList();
 
-    @GET("rpm/latest")
-    Call<LoadMessage> latestRpm();
+    @GET("load/latest")
+    Call<LoadMessage> latestLoad();
 }

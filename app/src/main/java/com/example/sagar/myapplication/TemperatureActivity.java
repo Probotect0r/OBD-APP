@@ -6,15 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.example.sagar.myapplication.RPM.RPMService;
-import com.example.sagar.myapplication.RPM.RpmMessage;
+import com.example.sagar.myapplication.EngineLoad.EngineLoadService;
+import com.example.sagar.myapplication.EngineLoad.LoadMessage;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class TemperatureActivity extends AppCompatActivity {
     BarDataSet barDataSet;
     BarData barData ;
     private static final String TAG = "TemperatureActivity";
-    private RPMService rpmService;
+    private EngineLoadService engineLoadService;
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
             .addConverterFactory(JacksonConverterFactory.create())
@@ -54,7 +53,7 @@ public class TemperatureActivity extends AppCompatActivity {
         chart.setDescription(d);
 
         // Set up RpmService
-        rpmService = retrofit.create(RPMService.class);
+        engineLoadService = retrofit.create(EngineLoadService.class);
 
         // Set up entries for chart
         barEntries = new ArrayList<>();
@@ -71,13 +70,13 @@ public class TemperatureActivity extends AppCompatActivity {
             System.out.println("Started polling thread.");
             while (continuePolling) {
                 // Make the API call to retrieve latest RPM
-                Call<RpmMessage> call = this.rpmService.latestRpm();
-                call.enqueue(new Callback<RpmMessage>() {
+                Call<LoadMessage> call = this.engineLoadService.latestLoad();
+                call.enqueue(new Callback<LoadMessage>() {
 
                     @Override
-                    public void onResponse(Call<RpmMessage> call, Response<RpmMessage> response) {
-                        RpmMessage msg = response.body();
-                        barDataSet.addEntry(new BarEntry(barEntries.size(), msg.getRpm()));
+                    public void onResponse(Call<LoadMessage> call, Response<LoadMessage> response) {
+                        LoadMessage msg = response.body();
+                        barDataSet.addEntry(new BarEntry(barEntries.size(), msg.getLoad()));
                         chart.post(() -> {
                             barData.notifyDataChanged();
                             chart.notifyDataSetChanged();
@@ -86,7 +85,7 @@ public class TemperatureActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<RpmMessage> call, Throwable t) {
+                    public void onFailure(Call<LoadMessage> call, Throwable t) {
 
                     }
                 });
@@ -100,22 +99,16 @@ public class TemperatureActivity extends AppCompatActivity {
             }
         });
 
-        // 1. Query last 10 points (Done)
-        // 2. Display those points on graph (Done)
-        // 3. Start polling thread to get latest message on an interval (Done)
-        // 4. Update the graph with latest message (done)
-
-
-        // Request the 10 latest rpm messages from the server
-        Call<List<RpmMessage>> call = this.rpmService.rpmList();
-        call.enqueue(new Callback<List<RpmMessage>>() {
+        // Request the 10 latest load messages from the server
+        Call<List<LoadMessage>> call = this.engineLoadService.loadList();
+        call.enqueue(new Callback<List<LoadMessage>>() {
             @Override
-            public void onResponse(Call<List<RpmMessage>> call, Response<List<RpmMessage>> response) {
+            public void onResponse(Call<List<LoadMessage>> call, Response<List<LoadMessage>> response) {
                 // Get the response and set up the chart
-                List<RpmMessage> messages = response.body();
+                List<LoadMessage> messages = response.body();
                 for (int i = 0; i < messages.size(); i++) {
-                    RpmMessage msg = messages.get(i);
-                    barEntries.add(new BarEntry(i, msg.getRpm()));
+                    LoadMessage msg = messages.get(i);
+                    barEntries.add(new BarEntry(i, msg.getLoad()));
                 }
 
                 // Create line data set and add styling
@@ -143,8 +136,8 @@ public class TemperatureActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<RpmMessage>> call, Throwable t) {
-                Log.e(TAG, "Error in request to /rpm" + t.getMessage());
+            public void onFailure(Call<List<LoadMessage>> call, Throwable t) {
+                Log.e(TAG, "Error in request to /load" + t.getMessage());
                 t.printStackTrace();
                 // TODO: Show some error
             }
