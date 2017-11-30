@@ -38,8 +38,8 @@ public class BluetoothThread extends Thread {
     private Retrofit retrofit;
     private PostService postService;
 
-    private static final String API_ADDRESS = "192.168.0.17";
-//    private static final String API_ADDRESS = "138.197.167.62";
+    public static final String API_ADDRESS = "192.168.0.17";
+//    public static final String API_ADDRESS = "138.197.167.62";
 
     private static final List<String> COMMANDS = new ArrayList<>(Arrays.asList("010C\r", "0111\r", "010D\r"));
 
@@ -88,7 +88,6 @@ public class BluetoothThread extends Thread {
         while(this.continuePolling) {
             // Loop through each command
             for (String command : COMMANDS) {
-                Log.d(TAG, "Processing command: " + command);
 
                 // Write the command to the sensor
                 try {
@@ -107,7 +106,7 @@ public class BluetoothThread extends Thread {
                     Log.e("Error rawdata: ", e.toString());
                     break;
                 }
-                Log.d(TAG, "Message from bluetooth: " + message);
+//                Log.d(TAG, "Message from bluetooth: " + message);
 
 
                 // Send the message to the server
@@ -115,9 +114,7 @@ public class BluetoothThread extends Thread {
                 Call<RawMessage> call = this.postService.createMessage(rawMessage);
                 call.enqueue(new Callback<RawMessage>() {
                     @Override
-                    public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {
-                        Log.d(TAG, "Response code from server: " + response.code());
-                    }
+                    public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {}
 
                     @Override
                     public void onFailure(Call<RawMessage> call, Throwable t) {

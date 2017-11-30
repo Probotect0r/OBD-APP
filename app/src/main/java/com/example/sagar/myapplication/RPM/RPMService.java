@@ -10,9 +10,9 @@ import retrofit2.http.GET;
  */
 
 public interface RPMService {
-    @GET("rpm/list")
-    Call<List<RPM>> rpmList();
+    @GET("rpm")
+    Call<List<RpmMessage>> rpmList();
 
-    @GET("rpm/list/latest")
-    Call<RPM> latestRpm();
+    @GET("rpm/latest")
+    Call<RpmMessage> latestRpm();
 }

@@ -97,11 +97,9 @@ public class MainActivity extends AppCompatActivity {
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
-                Log.d(TAG, deviceName);
 
                 if (deviceName.equals("DESKTOP-46PD4HS")) {
                     // Connect to this device
-                    Log.d(TAG,"Connecting to " + deviceName);
                     this.thread = new BluetoothThread(device);
                     this.thread.start();
                 }

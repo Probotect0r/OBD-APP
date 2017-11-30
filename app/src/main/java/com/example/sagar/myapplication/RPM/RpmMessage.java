@@ -4,7 +4,8 @@ package com.example.sagar.myapplication.RPM;
  * Created by sagar on 11/26/17.
  */
 
-public class RPM {
+public class RpmMessage {
+    private String id;
     private String type;
     private int rpm;
     private String timestamp;
@@ -31,5 +32,13 @@ public class RPM {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
