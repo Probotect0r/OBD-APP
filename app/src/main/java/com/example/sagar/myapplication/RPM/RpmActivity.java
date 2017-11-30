@@ -160,5 +160,14 @@ public class RpmActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         this.continuePolling = false;
+//        String result = "";
+
+//        NotificationCompat.Builder notif = new NotificationCompat.Builder(this)
+//                .setContentTitle("Vehicle Analytics Bruh")
+//                .setStyle(new NotificationCompat.BigTextStyle().bigText(result));
+//
+//
+//        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//        manager.notify(1, notif.build());
     }
 }

@@ -1,43 +1,73 @@
 package com.example.sagar.myapplication;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
 
 public class TemperatureActivity extends AppCompatActivity {
 
-    ImageView img;
-    TextView value;
-
-    //Temporary change to any value later
-    private int temp = 100;
+    BarChart chart ;
+    ArrayList<BarEntry> BARENTRY ;
+    ArrayList<String> BarEntryLabels ;
+    BarDataSet Bardataset ;
+    BarData BARDATA ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temprature);
 
-        img = findViewById(R.id.thermometer);
+        chart = (BarChart) findViewById(R.id.engineLoadChart);
 
+        BARENTRY = new ArrayList<>();
 
-        //change color of the SVG depending on the temprature being too hot, too, cold or just right
-        if (temp > 100) {
-            img.setColorFilter(ContextCompat.getColor(this, R.color.veryRed), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if (temp < 50) {
-            img.setColorFilter(ContextCompat.getColor(this, R.color.blue), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else {
-            img.setColorFilter(ContextCompat.getColor(this, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
-        }
+        BarEntryLabels = new ArrayList<String>();
 
+        AddValuesToBARENTRY();
+//        AddValuesToBarEntryLabels();
 
-        value = findViewById(R.id.txtEngineTemp);
+        Bardataset = new BarDataSet(BARENTRY, "Projects");
 
-        value.setText("Engine Temp: " + Integer.toString(temp));
+        BARDATA = new BarData(Bardataset);
+
+        Bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+
+        chart.setData(BARDATA);
+
+        chart.animateY(3000);
+
     }
 
+    public void AddValuesToBARENTRY(){
+
+        BARENTRY.add(new BarEntry(0, 0));
+        BARENTRY.add(new BarEntry(1, 1));
+        BARENTRY.add(new BarEntry(2, 2));
+        BARENTRY.add(new BarEntry(3, 3));
+        BARENTRY.add(new BarEntry(4, 4));
+        BARENTRY.add(new BarEntry(5, 5));
+
+    }
+
+//    public void AddValuesToBarEntryLabels(){
+//
+//        BarEntryLabels.add("January");
+//        BarEntryLabels.add("February");
+//        BarEntryLabels.add("March");
+//        BarEntryLabels.add("April");
+//        BarEntryLabels.add("May");
+//        BarEntryLabels.add("June");
+//
+//    }
+    
     //Return back to home screen
     public void backToHome(View view) {
         finish();
