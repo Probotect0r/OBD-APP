@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FuelActivity" />
+        <activity android:name=".RPM.RpmActivity" />
         <activity android:name=".TemperatureActivity" />
         <activity android:name=".RPM.SpeedRPMActivity"></activity>
     </application>
