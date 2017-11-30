@@ -5,11 +5,11 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.sagar.myapplication.RPM.RpmActivity;
 import com.example.sagar.myapplication.RPM.SpeedRPMActivity;
 
 import java.util.Set;
@@ -27,9 +27,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Check if bluetooth is enabled
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        // Check if bluetooth is supported, if not, dont start bluetooth thread
+        if (this.bluetoothAdapter == null) {
+            return;
+        }
 
+        // Check if bluetooth is enabled
         if (!bluetoothAdapter.isEnabled()) {
             // Not enabled, request access
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     //UI Activities
     public void showFuelActivity(View view) {
-        Intent showFuelActivity = new Intent (this, FuelActivity.class);
+        Intent showFuelActivity = new Intent (this, RpmActivity.class);
         startActivity(showFuelActivity);
     }
 

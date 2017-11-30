@@ -1,4 +1,4 @@
-package com.example.sagar.myapplication;
+package com.example.sagar.myapplication.RPM;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.example.sagar.myapplication.RPM.RPMService;
-import com.example.sagar.myapplication.RPM.RpmMessage;
+import com.example.sagar.myapplication.BluetoothThread;
+import com.example.sagar.myapplication.R;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -23,9 +23,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class FuelActivity extends AppCompatActivity {
+public class RpmActivity extends AppCompatActivity {
 
-    private static final String TAG = "FuelActivity";
+    private static final String TAG = "RpmActivity";
 
     private LineChart lineChart;
     private LineDataSet lineDataSet;
@@ -43,7 +43,7 @@ public class FuelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fuel);
+        setContentView(R.layout.activity_rpm);
 
         // Set up RpmService
         rpmService = retrofit.create(RPMService.class);
