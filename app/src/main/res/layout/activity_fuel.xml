@@ -6,6 +6,27 @@
     android:layout_height="match_parent"
     tools:context="com.example.sagar.myapplication.FuelActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        tools:layout_editor_absoluteY="12dp">
+
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="backToHome"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            />
+    </android.support.design.widget.AppBarLayout>
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
@@ -17,10 +38,11 @@
         android:id="@+id/txtFE"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/backBtn"
-        android:layout_below="@+id/backBtn"
-        android:layout_marginStart="39dp"
-        android:layout_marginTop="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/appbar"
+        android:layout_marginStart="57dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="15dp"
         android:fontFamily="sans-serif-condensed"
         android:text="Fuel Economy:"
         android:textAlignment="center"
@@ -32,25 +54,15 @@
         android:id="@+id/feValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/txtFE"
-        android:layout_alignBottom="@+id/txtFE"
-        android:layout_marginStart="11dp"
+        android:layout_below="@+id/appbar"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="15dp"
         android:layout_toEndOf="@+id/txtFE"
         android:text="Value"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="24sp"
         android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/backBtn"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="13dp"
-        android:src="@drawable/ic_arrow_back_black_24dp"
-        android:onClick="backToHome"/>
 
 </RelativeLayout>

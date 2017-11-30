@@ -13,7 +13,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,8 @@ public class FuelActivity extends AppCompatActivity {
         // Set up chart
         lineChart = findViewById(R.id.lineChart);
         lineChart.setDragEnabled(true);
-        lineChart.setScaleEnabled(false);
+        lineChart.setScaleEnabled(true);
+        lineChart.setPinchZoom(true);
         lineChart.setVisibleXRangeMaximum(10);
 
         // Create list of chart entries
@@ -120,6 +120,8 @@ public class FuelActivity extends AppCompatActivity {
                 lineDataSet.setCircleRadius(4);
                 lineDataSet.setCircleHoleRadius(3);
                 lineDataSet.setHighLightColor(Color.RED);
+                lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                lineDataSet.setDrawCircles(false);
 
                 // add line to the graph
                 lineData = new LineData(lineDataSet);
