@@ -45,8 +45,10 @@ public class BluetoothThread extends Thread {
 
     public BluetoothThread(BluetoothDevice device) {
         this.bluetoothDevice = device;
+        setupRetrofit();
+    }
 
-        // Set up Rest Service
+    private void setupRetrofit() {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl("http://" + this.API_ADDRESS + ":8080/")
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -56,105 +58,133 @@ public class BluetoothThread extends Thread {
     }
 
     public void run() {
-        // Set up socket
+        setupBluetoothSocket();
+        setupInputStream();
+        setupOutputStream();
+        connectToSocket();
+        pollDevice();
+    }
+
+    private void setupBluetoothSocket() {
         try {
             this.bluetoothSocket = this.bluetoothDevice.createRfcommSocketToServiceRecord(SERIAL_UUID);
         } catch (IOException err) {
             Log.e(TAG, "Error creating socket", err);
         }
+    }
 
-        // Get the input and output streams
+    private void setupInputStream() {
         try {
             this.inputStream = this.bluetoothSocket.getInputStream();
         } catch (IOException e) {
             Log.e(TAG, "Error occurred when creating input stream", e);
         }
+    }
+
+    private void setupOutputStream() {
         try {
             this.outputStream = this.bluetoothSocket.getOutputStream();
         } catch (IOException e) {
             Log.e(TAG, "Error occurred when creating output stream", e);
         }
+    }
 
-        // Connect to socket
+    private void connectToSocket() {
         try {
             this.bluetoothSocket.connect();
             Log.d(TAG, "Connected to OBD.");
         } catch (IOException err) {
-            Log.e(TAG, "Error connecting to device", err);
-            return;
+            String errorMessage= "Error connecting to device";
+            Log.e(TAG, errorMessage, err);
+            throw new RuntimeException(errorMessage, err);
         }
+    }
 
-        // Start polling the device
+    private void pollDevice() {
         while(this.continuePolling) {
-            // Loop through each command
-            for (String command : COMMANDS) {
+            this.executeCommandsOnSystem();
+            this.sleep();
+        }
+    }
 
-                // Write the command to the sensor
-                try {
-                    this.write(command.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Error writing data: ", e);
-                    break;
-                }
-
-                // Get the response
-                String message = null;
-                try {
-                    message = this.getString();
-                } catch (IOException e) {
-                    Log.e("Error rawdata: ", e.toString());
-                    break;
-                }
-//                Log.d(TAG, "Message from bluetooth: " + message);
-
-
-                // Send the message to the server
-                RawMessage rawMessage = new RawMessage(message);
-                Call<RawMessage> call = this.postService.createMessage(rawMessage);
-                call.enqueue(new Callback<RawMessage>() {
-                    @Override
-                    public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {}
-
-                    @Override
-                    public void onFailure(Call<RawMessage> call, Throwable t) {
-                        Log.e(TAG, "Error sending message to server: " + t);
-                    }
-                });
-
-            }
-
-            // Sleep for a bit
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Log.e(TAG, "Error putting thread to sleeep: " + e);
-                e.printStackTrace();
+    private void executeCommandsOnSystem() {
+        for (String command : COMMANDS) {
+            writeCommand(command);
+            String response = getStringFromInputStream();
+            if (response != "") {
+                sendMessageToServer(response);
             }
         }
     }
 
-    public String getString() throws IOException {
-        StringBuilder res = new StringBuilder();
+    public void writeCommand(String command) {
+        try {
+            outputStream.write(command.getBytes());
+            flushOutputstream();
+        } catch (IOException e) {
+            Log.e(TAG, "Error writing bytes to output stream", e);
+        }
+    }
 
-        // Keep reading from the InputStream until the end of the message is reached
+    public String getStringFromInputStream() {
+        StringBuilder response = new StringBuilder();
+
         while (true) {
-                // Read one byte from the InputStream
-                byte b = (byte) inputStream.read();
+            byte data = getByteFromInputStream();
+            char character = (char) data;
 
-                if (((char) b) == '>') {
-                    return res.toString().trim();
-                }
+            if (character == '>') {
+                return response.toString().trim();
+            }
 
-                if (((char) b) != ' ') {
-                    res.append((char) b);
-                }
+            if (character != ' ') {
+                response.append(character);
+            }
         }
     }
 
-    public void write(byte[] bytes) throws  IOException {
-            outputStream.write(bytes);
+    private byte getByteFromInputStream() {
+        try {
+            byte data = (byte) inputStream.read();
+            return data;
+        } catch (IOException e) {
+            String errorMessage = "Error putting thread to sleeep";
+            Log.e(TAG, errorMessage, e);
+            throw new RuntimeException(errorMessage, e);
+        }
+    }
+
+    private void sendMessageToServer(String message) {
+        RawMessage rawMessage = new RawMessage(message);
+        Call<RawMessage> call = this.postService.createMessage(rawMessage);
+        call.enqueue(new Callback<RawMessage>() {
+            @Override
+            public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {}
+
+            @Override
+            public void onFailure(Call<RawMessage> call, Throwable t) {
+                Log.e(TAG, "Error sending message to server: " + t);
+            }
+        });
+
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void flushOutputstream() {
+        try {
             outputStream.flush();
+        } catch (IOException e) {
+            Log.e(TAG, "Error flushing output stream", e);
+        }
+
     }
 
     public boolean isContinuePolling() {
