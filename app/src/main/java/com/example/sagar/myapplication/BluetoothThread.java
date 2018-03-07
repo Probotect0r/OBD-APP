@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -38,10 +40,16 @@ public class BluetoothThread extends Thread {
     private Retrofit retrofit;
     private PostService postService;
 
-//    public static final String API_ADDRESS = "192.168.0.17";
-    public static final String API_ADDRESS = "138.197.167.62";
+    public static final String API_ADDRESS = "192.168.0.17";
+//    public static final String API_ADDRESS = "138.197.167.62";
 
-    private static final List<String> COMMANDS = new ArrayList<>(Arrays.asList("010C\r", "0111\r", "010D\r"));
+    private static final Map<String, String> COMMANDS = new HashMap<>();
+
+    static {
+        COMMANDS.put("RPM", "010C\r");
+        COMMANDS.put("THROTTLE_POSITION", "0111\r");
+        COMMANDS.put("SPEED", "010D\r");
+    }
 
     public BluetoothThread(BluetoothDevice device) {
         this.bluetoothDevice = device;
@@ -108,13 +116,16 @@ public class BluetoothThread extends Thread {
     }
 
     private void executeCommandsOnSystem() {
-        for (String command : COMMANDS) {
-            writeCommand(command);
+        RawMessage rawMessage = new RawMessage();
+
+        for (String commandKey : COMMANDS.keySet()) {
+            writeCommand(COMMANDS.get(commandKey));
             String response = getStringFromInputStream();
-            if (response != "") {
-                sendMessageToServer(response);
-            }
+            Log.d(TAG, response);
+            rawMessage.addMessageValue(commandKey, response);
         }
+
+        sendMessageToServer(rawMessage);
     }
 
     public void writeCommand(String command) {
@@ -123,6 +134,14 @@ public class BluetoothThread extends Thread {
             flushOutputstream();
         } catch (IOException e) {
             Log.e(TAG, "Error writing bytes to output stream", e);
+        }
+    }
+
+    private void flushOutputstream() {
+        try {
+            outputStream.flush();
+        } catch (IOException e) {
+            Log.e(TAG, "Error flushing output stream", e);
         }
     }
 
@@ -148,14 +167,13 @@ public class BluetoothThread extends Thread {
             byte data = (byte) inputStream.read();
             return data;
         } catch (IOException e) {
-            String errorMessage = "Error putting thread to sleeep";
+            String errorMessage = "Error putting thread to sleep";
             Log.e(TAG, errorMessage, e);
             throw new RuntimeException(errorMessage, e);
         }
     }
 
-    private void sendMessageToServer(String message) {
-        RawMessage rawMessage = new RawMessage(message);
+    private void sendMessageToServer(RawMessage rawMessage) {
         Call<RawMessage> call = this.postService.createMessage(rawMessage);
         call.enqueue(new Callback<RawMessage>() {
             @Override
@@ -163,7 +181,7 @@ public class BluetoothThread extends Thread {
 
             @Override
             public void onFailure(Call<RawMessage> call, Throwable t) {
-                Log.e(TAG, "Error sending message to server: " + t);
+                Log.e(TAG, "Error sending message to server:", t);
             }
         });
 
@@ -175,17 +193,8 @@ public class BluetoothThread extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
-    private void flushOutputstream() {
-        try {
-            outputStream.flush();
-        } catch (IOException e) {
-            Log.e(TAG, "Error flushing output stream", e);
-        }
-
-    }
 
     public boolean isContinuePolling() {
         return continuePolling;

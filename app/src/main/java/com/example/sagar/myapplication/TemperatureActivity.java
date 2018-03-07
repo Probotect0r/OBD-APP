@@ -27,8 +27,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class TemperatureActivity extends AppCompatActivity {
 
-    BarChart chart ;
-    ArrayList<BarEntry> barEntries ;
+    BarChart chart;
+    ArrayList<BarEntry> barEntries;
     BarDataSet barDataSet;
     BarData barData ;
     private static final String TAG = "TemperatureActivity";

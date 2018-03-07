@@ -1,19 +1,16 @@
 package com.example.sagar.myapplication;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RawMessage {
-    public String rawMessage;
+    private Map<String, String> rawValues;
 
-    public RawMessage() {}
-
-    public RawMessage(String rawMessage) {
-        this.rawMessage = rawMessage;
+    public RawMessage() {
+        this.rawValues = new HashMap<>();
     }
 
-    public String getRawMessage() {
-        return rawMessage;
-    }
-
-    public void setRawMessage(String rawMessage) {
-        this.rawMessage = rawMessage;
+    public void addMessageValue(String key, String value) {
+        rawValues.put(key, value);
     }
 }
