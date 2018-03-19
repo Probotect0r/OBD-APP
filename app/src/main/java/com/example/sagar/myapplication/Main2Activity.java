@@ -77,7 +77,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
                 fragment = new Dash_fragment();
                 break;
             case R.id.navigation_notifications:
-                fragment = new Notification_Fragment();
+                //TODO: Load a new fragment for the notifications/history data;
                 break;
         }
 
