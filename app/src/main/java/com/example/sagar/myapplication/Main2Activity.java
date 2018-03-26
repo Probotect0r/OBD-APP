@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,18 +37,14 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
         loadFragment(new Home_fragment());
 
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        // Check if bluetooth is supported, if not, dont start bluetooth thread
         if (this.bluetoothAdapter == null) {
             return;
         }
 
-        // Check if bluetooth is enabled
         if (!bluetoothAdapter.isEnabled()) {
-            // Not enabled, request access
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 1);
         } else {
-            // Bluetooth already enabled
             this.setupBluetoothConnection();
 
         }
@@ -134,14 +131,18 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
     }
 
     public void setupBluetoothConnection() {
+        Log.d(TAG, "Looking for bluetooth device.");
         Set<BluetoothDevice> pairedDevices = this.bluetoothAdapter.getBondedDevices();
 
         if (pairedDevices.size() > 0) {
+            Log.d(TAG, "Found list of paired devices.");
+
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
+                Log.d(TAG, "Device: " + deviceName);
 
                 if (deviceName.equals("DESKTOP-46PD4HS")) {
-                    // Connect to this device
+                    Log.d(TAG, "Found Sagar's Laptop, starting bluetooth thread.");
                     this.thread = new BluetoothThread(device);
                     this.thread.start();
                 }

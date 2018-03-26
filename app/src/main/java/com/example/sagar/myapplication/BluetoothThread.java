@@ -7,16 +7,15 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by sagar on 11/25/17.
@@ -38,10 +37,18 @@ public class BluetoothThread extends Thread {
     private Retrofit retrofit;
     private PostService postService;
 
-//    public static final String API_ADDRESS = "192.168.0.17";
-    public static final String API_ADDRESS = "138.197.167.62";
+    public static final String API_ADDRESS = "192.168.0.192";
+//    public static final String API_ADDRESS = "138.197.167.62";
 
-    private static final List<String> COMMANDS = new ArrayList<>(Arrays.asList("010C\r", "0111\r", "010D\r"));
+//    private static final List<String> COMMANDS = new ArrayList<>(Arrays.asList("010C\r", "0111\r", "010D\r"));
+
+    private static final Map<String, String> COMMANDS = new HashMap<>();
+
+    static {
+        COMMANDS.put("RPM", "010C\r");
+        COMMANDS.put("THROTTLE_POSITION", "0111\r");
+        COMMANDS.put("SPEED", "010D\r");
+}
 
     public BluetoothThread(BluetoothDevice device) {
         this.bluetoothDevice = device;
@@ -51,13 +58,14 @@ public class BluetoothThread extends Thread {
     private void setupRetrofit() {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl("http://" + this.API_ADDRESS + ":8080/")
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         this.postService = retrofit.create(PostService.class);
     }
 
     public void run() {
+        Log.d(TAG, "BluetoothThread started.");
         setupBluetoothSocket();
         setupInputStream();
         setupOutputStream();
@@ -66,6 +74,7 @@ public class BluetoothThread extends Thread {
     }
 
     private void setupBluetoothSocket() {
+        Log.d(TAG, "Setting up Bluetooth.");
         try {
             this.bluetoothSocket = this.bluetoothDevice.createRfcommSocketToServiceRecord(SERIAL_UUID);
         } catch (IOException err) {
@@ -108,13 +117,16 @@ public class BluetoothThread extends Thread {
     }
 
     private void executeCommandsOnSystem() {
-        for (String command : COMMANDS) {
-            writeCommand(command);
+        RawMessage rawMessage = new RawMessage();
+
+        for (String commandKey : COMMANDS.keySet()) {
+            writeCommand(COMMANDS.get(commandKey));
             String response = getStringFromInputStream();
-            if (response != "") {
-                sendMessageToServer(response);
-            }
+            Log.d(TAG, response);
+            rawMessage.addMessageValue(commandKey, response);
         }
+
+        sendMessageToServer(rawMessage);
     }
 
     public void writeCommand(String command) {
@@ -154,8 +166,7 @@ public class BluetoothThread extends Thread {
         }
     }
 
-    private void sendMessageToServer(String message) {
-        RawMessage rawMessage = new RawMessage(message);
+    private void sendMessageToServer(RawMessage rawMessage) {
         Call<RawMessage> call = this.postService.createMessage(rawMessage);
         call.enqueue(new Callback<RawMessage>() {
             @Override
