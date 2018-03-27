@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by achal on 2018-03-07.
  */
 
-public class Home_fragment extends Fragment{
+public class Home_fragment extends Fragment {
 
     @Nullable
     @Override
@@ -72,5 +72,4 @@ public class Home_fragment extends Fragment{
 
         return view;
     }
-
 }

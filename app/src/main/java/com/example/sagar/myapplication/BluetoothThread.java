@@ -37,10 +37,11 @@ public class BluetoothThread extends Thread {
     private Retrofit retrofit;
     private PostService postService;
 
+    private Drive drive;
+
     public static final String API_ADDRESS = "192.168.0.192";
 //    public static final String API_ADDRESS = "138.197.167.62";
 
-//    private static final List<String> COMMANDS = new ArrayList<>(Arrays.asList("010C\r", "0111\r", "010D\r"));
 
     private static final Map<String, String> COMMANDS = new HashMap<>();
 
@@ -70,7 +71,7 @@ public class BluetoothThread extends Thread {
         setupInputStream();
         setupOutputStream();
         connectToSocket();
-        pollDevice();
+        createNewDrive();
     }
 
     private void setupBluetoothSocket() {
@@ -109,6 +110,24 @@ public class BluetoothThread extends Thread {
         }
     }
 
+    private void createNewDrive() {
+        Log.d(TAG, "Creating new Drive.");
+        Call<Drive> call = this.postService.createDrive();
+        call.enqueue(new Callback<Drive>() {
+            @Override
+            public void onResponse(Call<Drive> call, Response<Drive> response) {
+                drive = response.body();
+                Log.d(TAG, "Created drive with id: " + drive.getId());
+                pollDevice();
+            }
+
+            @Override
+            public void onFailure(Call<Drive> call, Throwable t) {
+                Log.e(TAG, "Error creating drive: ", t);
+            }
+        });
+    }
+
     private void pollDevice() {
         while(this.continuePolling) {
             this.executeCommandsOnSystem();
@@ -118,6 +137,7 @@ public class BluetoothThread extends Thread {
 
     private void executeCommandsOnSystem() {
         RawMessage rawMessage = new RawMessage();
+        rawMessage.setDriveId(this.drive.getId());
 
         for (String commandKey : COMMANDS.keySet()) {
             writeCommand(COMMANDS.get(commandKey));
@@ -129,7 +149,7 @@ public class BluetoothThread extends Thread {
         sendMessageToServer(rawMessage);
     }
 
-    public void writeCommand(String command) {
+    private void writeCommand(String command) {
         try {
             outputStream.write(command.getBytes());
             flushOutputstream();
@@ -138,7 +158,7 @@ public class BluetoothThread extends Thread {
         }
     }
 
-    public String getStringFromInputStream() {
+    private String getStringFromInputStream() {
         StringBuilder response = new StringBuilder();
 
         while (true) {
