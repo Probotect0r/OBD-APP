@@ -43,19 +43,22 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
         RecentDriveCard currentItem = mList.get(position);
 
+        //Get Id of the drive to pass into the next activity for query
+        String driveId = "";
+
         holder.txtDate.setText(currentItem.getDate().toString());
         holder.txtDuration.setText(currentItem.getDuration().toString());
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(view.getContext(), RecentDriveInfo.class);
-                i.putExtra("date", holder.txtDate.getText());
-                i.putExtra("duration", holder.txtDate.getText());
+                i.putExtra("driveId", driveId);
                 view.getContext().startActivity(i);
             }
         });
     }
-
+    
     @Override
     public int getItemCount() {
         return mList.size();

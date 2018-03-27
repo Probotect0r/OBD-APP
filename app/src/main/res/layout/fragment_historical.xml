@@ -9,23 +9,61 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/selectDate"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="56dp"
+            android:text="Date"
+            android:textSize="24sp" />
+
         <Button
             android:id="@+id/selectDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/selectTime"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="106dp"
+            android:layout_marginTop="166dp"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:text="@string/select_date"
-            android:onClick="chooseDate"/>
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/txtTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/selectDate"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="46dp"
+            android:text="Time"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/selectTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/selectDate"
-            android:layout_below="@+id/selectDate"
-            android:layout_marginTop="39dp"
+            android:layout_below="@+id/txtTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:padding="10dp"
             android:text="@string/select_time" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="51dp"
+            android:backgroundTint="@color/yellowBtn"
+            android:text="@string/search_drive"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:padding="15dp"/>
+
     </RelativeLayout>
 </FrameLayout>

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
@@ -32,6 +33,9 @@ public class HistoricalFragment extends Fragment {
         Button date = view.findViewById(R.id.selectDate);
         Button time = view.findViewById(R.id.selectTime);
 
+        TextView txtDate = view.findViewById(R.id.txtDate);
+        TextView txtTime = view.findViewById(R.id.txtTime);
+
         DatePickerDialog.OnDateSetListener dateSetListener;
         TimePickerDialog.OnTimeSetListener timeSetListener;
 
@@ -42,12 +46,14 @@ public class HistoricalFragment extends Fragment {
                 //parameters store latest dates
                 //*** month array starts from 0 by default
                 month = month + 1;
+                txtDate.setText(day + "/" + month + "/" + year);
             }
         };
 
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minutes) {
+                txtTime.setText(hour + ":" + minutes);
                 Log.d("Chosen Time", "onTimeSet: " + hour + " " + minutes);
             }
         };

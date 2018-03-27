@@ -30,5 +30,6 @@ public class HomeActivityStarted extends AppCompatActivity {
         Log.d("HOME ACTIVITY STARTED", "stopDrive: " + elapsedMills);
         clock.stop();
         clock.setBase(SystemClock.elapsedRealtime());
+        finish();
     }
 }
