@@ -7,14 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.ViewHolder> {
 
-    private ArrayList<RecentDriveCard> mList;
+    private List<Drive> recentDrives;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public TextView txtDate;
         public TextView txtDuration;
         public View layout;
@@ -27,8 +28,8 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.ViewHo
         }
     }
 
-    public HomeCardAdapter(ArrayList<RecentDriveCard> list) {
-        mList = list;
+    public HomeCardAdapter(List<Drive> list) {
+        recentDrives = list;
     }
 
     @Override
@@ -41,26 +42,27 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        RecentDriveCard currentItem = mList.get(position);
+        Drive currentItem = recentDrives.get(position);
 
-        //Get Id of the drive to pass into the next activity for query
-        String driveId = "";
+        String driveId = currentItem.getId();
+        Date start = currentItem.getStart();
+        Date end = currentItem.getEnd();
 
-        holder.txtDate.setText(currentItem.getDate().toString());
-        holder.txtDuration.setText(currentItem.getDuration().toString());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        String dateString = simpleDateFormat.format(start);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(view.getContext(), RecentDriveInfo.class);
-                i.putExtra("driveId", driveId);
-                view.getContext().startActivity(i);
-            }
+        holder.txtDate.setText(dateString);
+        holder.txtDuration.setText("30 seconds");
+
+        holder.itemView.setOnClickListener(view -> {
+            Intent i = new Intent(view.getContext(), RecentDriveInfo.class);
+            i.putExtra("driveId", driveId);
+            view.getContext().startActivity(i);
         });
     }
     
     @Override
     public int getItemCount() {
-        return mList.size();
+        return recentDrives.size();
     }
 }
