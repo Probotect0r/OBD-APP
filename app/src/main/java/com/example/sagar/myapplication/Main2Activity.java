@@ -53,7 +53,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
     private boolean loadFragment (Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager()
-                    .beginTransaction()
+                    .beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.fade_out)
                     .replace(R.id.fragment_content, fragment)
                     .commit();
 
