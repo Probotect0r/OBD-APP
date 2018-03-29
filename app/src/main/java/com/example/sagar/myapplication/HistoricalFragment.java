@@ -3,24 +3,20 @@ package com.example.sagar.myapplication;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import java.util.Calendar;
 
 
 public class HistoricalFragment extends Fragment {
-
 
     public HistoricalFragment() {
         // Required empty public constructor
@@ -30,14 +26,15 @@ public class HistoricalFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_historical, container, false);
-        Button date = view.findViewById(R.id.selectDate);
-        Button time = view.findViewById(R.id.selectTime);
+        final Button[] btnDate = {view.findViewById(R.id.selectDate)};
+        Button searchDrives = view.findViewById(R.id.searchDriveByDate);
 
         TextView txtDate = view.findViewById(R.id.txtDate);
-        TextView txtTime = view.findViewById(R.id.txtTime);
 
         DatePickerDialog.OnDateSetListener dateSetListener;
         TimePickerDialog.OnTimeSetListener timeSetListener;
+
+        final String[] date = {""};
 
         //Initialize dateSet Listener
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -46,41 +43,30 @@ public class HistoricalFragment extends Fragment {
                 //parameters store latest dates
                 //*** month array starts from 0 by default
                 month = month + 1;
-                txtDate.setText(day + "/" + month + "/" + year);
+                date[0] = day + "/" + month + "/" + year;
+                txtDate.setText(date[0]);
             }
         };
 
-        timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hour, int minutes) {
-                txtTime.setText(hour + ":" + minutes);
-                Log.d("Chosen Time", "onTimeSet: " + hour + " " + minutes);
-            }
-        };
-
-
-        date.setOnClickListener(view1 -> {
+        btnDate[0].setOnClickListener(view1 -> {
             Calendar cal = Calendar.getInstance();
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH);
             int day = cal.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog dialog = new DatePickerDialog(getContext(),
-                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                    android.R.style.Theme_DeviceDefault_Dialog_MinWidth,
                     dateSetListener, year, month, day);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow();
             dialog.show();
         });
 
-        time.setOnClickListener(new View.OnClickListener() {
+        searchDrives.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar cal = Calendar.getInstance();
-                int hour = cal.get(Calendar.HOUR);
-                int min = cal.get(Calendar.MINUTE);
-
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, timeSetListener, hour, min, true);
-                timePickerDialog.show();
+                Intent i = new Intent(getActivity(), DrivesByDate.class);
+                i.putExtra("date", date[0]);
+                startActivity(i);
             }
         });
 

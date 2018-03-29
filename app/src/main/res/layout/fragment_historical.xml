@@ -13,9 +13,9 @@
             android:id="@+id/txtDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/selectDate"
+            android:layout_above="@+id/selectDate"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="56dp"
+            android:layout_marginBottom="26dp"
             android:text="Date"
             android:textSize="24sp" />
 
@@ -23,36 +23,15 @@
             android:id="@+id/selectDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/selectTime"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="166dp"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:text="@string/select_date"
-            android:padding="10dp"/>
-
-        <TextView
-            android:id="@+id/txtTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/selectDate"
+            android:layout_above="@+id/searchDriveByDate"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="46dp"
-            android:text="Time"
-            android:textSize="24sp" />
-
-        <Button
-            android:id="@+id/selectTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtTime"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="11dp"
+            android:layout_marginBottom="204dp"
             android:backgroundTint="@color/colorPrimaryDark"
             android:padding="10dp"
-            android:text="@string/select_time" />
+            android:text="@string/select_date" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/searchDriveByDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
