@@ -144,7 +144,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
                 if (deviceName.equals("DESKTOP-46PD4HS")) {
                     Log.d(TAG, "Found Sagar's Laptop, starting bluetooth thread.");
                     this.thread = new BluetoothThread(device);
-//                    this.thread.start();
+                    this.thread.start();
                 }
             }
         }

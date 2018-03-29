@@ -54,7 +54,8 @@ public class BluetoothThread extends Thread {
         COMMANDS.put("SPEED", "010D\r");
         COMMANDS.put("COOLANT_TEMPERATURE", "0105\r");
         COMMANDS.put("FUEL_PRESSURE", "010A\r");
-}
+        COMMANDS.put("MAF", "0110\r");
+    }
 
     public BluetoothThread(BluetoothDevice device) {
         this.bluetoothDevice = device;
@@ -147,7 +148,7 @@ public class BluetoothThread extends Thread {
         for (String commandKey : COMMANDS.keySet()) {
             writeCommand(COMMANDS.get(commandKey));
             String response = getStringFromInputStream();
-//            Log.d(TAG, commandKey + ": " + response);
+            Log.d(TAG, commandKey + ": " + response);
             rawMessage.addMessageValue(commandKey, response);
         }
 
