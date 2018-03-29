@@ -13,4 +13,5 @@
     <string name="select_date">Select Date</string>
     <string name="select_time">Select Time</string>
     <string name="search_drive">Search Drive</string>
+    <string name="record_drive">Record Drive</string>
 </resources>

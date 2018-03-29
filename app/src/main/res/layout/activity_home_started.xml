@@ -16,20 +16,4 @@
         android:textSize="40sp"
         android:textStyle="bold"/>
 
-    <Button
-        android:id="@+id/stopDrive"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/yellowBtn"
-        android:elevation="5dp"
-        android:onClick="stopDrive"
-        android:text="@string/stop_drive"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:typeface="monospace"/>
 </RelativeLayout>
