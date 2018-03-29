@@ -33,7 +33,8 @@
         <activity
             android:name=".RecentDriveInfo"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DriveByDate"></activity>
+        <activity android:name=".DriveByDate" />
+        <activity android:name=".ViewErrorCodes"></activity>
     </application>
 
 </manifest>
