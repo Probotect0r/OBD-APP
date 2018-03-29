@@ -49,6 +49,8 @@ public class BluetoothThread extends Thread {
         COMMANDS.put("RPM", "010C\r");
         COMMANDS.put("THROTTLE_POSITION", "0111\r");
         COMMANDS.put("SPEED", "010D\r");
+        COMMANDS.put("COOLANT_TEMPERATURE", "0105\r");
+        COMMANDS.put("FUEL_PRESSURE", "010A\r");
 }
 
     public BluetoothThread(BluetoothDevice device) {
