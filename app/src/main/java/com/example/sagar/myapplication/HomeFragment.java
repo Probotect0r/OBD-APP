@@ -1,6 +1,5 @@
 package com.example.sagar.myapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -46,8 +45,10 @@ public class HomeFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent start = new Intent(getActivity(), HomeActivityStarted.class);
-                startActivity(start);
+                getActivity().getSupportFragmentManager()
+                    .beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.fade_out)
+                    .replace(R.id.fragment_content, new Dash_fragment())
+                    .commit();
             }
         });
 
