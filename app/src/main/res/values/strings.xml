@@ -14,4 +14,6 @@
     <string name="select_time">Select Time</string>
     <string name="search_drive">Search Drive</string>
     <string name="record_drive">Record Drive</string>
+    <string name="error_and_faults">Error And Faults</string>
+    <string name="check_speed">Check Speed</string>
 </resources>
