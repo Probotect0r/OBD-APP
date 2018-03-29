@@ -1,4 +1,4 @@
-package com.example.sagar.myapplication;
+package com.example.sagar.myapplication.model;
 
 import java.util.Map;
 

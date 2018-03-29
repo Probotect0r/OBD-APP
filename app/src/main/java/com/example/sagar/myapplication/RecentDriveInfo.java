@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.example.sagar.myapplication.model.ProcessedMessage;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,6 +50,7 @@ public class RecentDriveInfo extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
                 processedMessages = response.body();
+                Log.d(TAG, "Got drive data: " + processedMessages.size());
             }
 
             @Override

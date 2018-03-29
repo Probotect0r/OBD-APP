@@ -34,7 +34,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
-        loadFragment(new Home_fragment());
+        loadFragment(new HomeFragment());
 
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (this.bluetoothAdapter == null) {
@@ -68,7 +68,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
         Fragment fragment = null;
         switch(item.getItemId()) {
             case R.id.navigation_home:
-                fragment = new Home_fragment();
+                fragment = new HomeFragment();
                 break;
             case R.id.navigation_dashboard:
                 fragment = new Dash_fragment();
@@ -144,7 +144,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
                 if (deviceName.equals("DESKTOP-46PD4HS")) {
                     Log.d(TAG, "Found Sagar's Laptop, starting bluetooth thread.");
                     this.thread = new BluetoothThread(device);
-                    this.thread.start();
+//                    this.thread.start();
                 }
             }
         }

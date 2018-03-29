@@ -4,6 +4,9 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import com.example.sagar.myapplication.model.Drive;
+import com.example.sagar.myapplication.model.RawMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,8 +42,8 @@ public class BluetoothThread extends Thread {
 
     private Drive drive;
 
-//    public static final String API_ADDRESS = "192.168.0.192";
-    public static final String API_ADDRESS = "138.197.167.62";
+    public static final String API_ADDRESS = "192.168.0.192";
+//    public static final String API_ADDRESS = "138.197.167.62";
 
 
     private static final Map<String, String> COMMANDS = new HashMap<>();
@@ -144,7 +147,7 @@ public class BluetoothThread extends Thread {
         for (String commandKey : COMMANDS.keySet()) {
             writeCommand(COMMANDS.get(commandKey));
             String response = getStringFromInputStream();
-            Log.d(TAG, response);
+//            Log.d(TAG, commandKey + ": " + response);
             rawMessage.addMessageValue(commandKey, response);
         }
 
