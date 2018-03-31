@@ -171,7 +171,7 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclepurple"
                             android:padding="10dp"
-                            android:src="@drawable/ic_tools" />
+                            android:src="@drawable/ic_rpm" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -215,7 +215,7 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclered"
                             android:padding="10dp"
-                            android:src="@drawable/engineload" />
+                            android:src="@drawable/ic_thermometer" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -267,13 +267,13 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclepurple"
                             android:padding="10dp"
-                            android:src="@drawable/ic_tools" />
+                            android:src="@drawable/ic_meter" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Fule Pressure"
+                            android:text="Fuel Pressure"
                             android:textStyle="bold" />
 
                         <View
@@ -311,7 +311,7 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclered"
                             android:padding="10dp"
-                            android:src="@drawable/engineload" />
+                            android:src="@drawable/ic_airflow" />
 
                         <TextView
                             android:layout_width="wrap_content"
