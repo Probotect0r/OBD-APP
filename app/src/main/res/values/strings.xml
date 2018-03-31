@@ -17,4 +17,5 @@
     <string name="error_and_faults">Error And Faults</string>
     <string name="check_speed">Check Speed</string>
     <string name="search_drives_by_date">Search Drives by Date</string>
+    <string name="throttle_position">Throttle Position</string>
 </resources>
