@@ -6,6 +6,9 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +16,29 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.example.sagar.myapplication.model.Drive;
+
 import java.util.Calendar;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.content.ContentValues.TAG;
 
 
 public class HistoricalFragment extends Fragment {
+
+    private Retrofit retrofit;
+    private RetrieveService retrieveService;
+
+    List<Drive> recentDrives;
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
 
     public HistoricalFragment() {
         // Required empty public constructor
@@ -26,11 +48,23 @@ public class HistoricalFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_historical, container, false);
+
         final Button[] btnDate = {view.findViewById(R.id.selectDate)};
         Button searchDrives = view.findViewById(R.id.searchDriveByDate);
-
         TextView txtDate = view.findViewById(R.id.txtDate);
 
+        //RecyclerView for recent Drives
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+
+        setupRetrofit();
+        fetchRecentDrives();
+
+
+        //setup datepicker for date  queries
         DatePickerDialog.OnDateSetListener dateSetListener;
         TimePickerDialog.OnTimeSetListener timeSetListener;
 
@@ -70,9 +104,39 @@ public class HistoricalFragment extends Fragment {
             }
         });
 
-
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void setupRetrofit() {
+        this.retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        this.retrieveService = retrofit.create(RetrieveService.class);
+    }
+
+    private void fetchRecentDrives() {
+        Call<List<Drive>> call = this.retrieveService.getRecentDrives();
+        call.enqueue(new Callback<List<Drive>>() {
+            @Override
+            public void onResponse(Call<List<Drive>> call, Response<List<Drive>> response) {
+                recentDrives = response.body();
+                loadDrivesIntoRecyclerView();
+            }
+
+            @Override
+            public void onFailure(Call<List<Drive>> call, Throwable t) {
+                Log.e(TAG, "Error sending message to server: " + t);
+            }
+        });
+
+    }
+
+    private void loadDrivesIntoRecyclerView() {
+        adapter = new HomeCardAdapter(recentDrives);
+        recyclerView.setAdapter(adapter);
     }
 
 }

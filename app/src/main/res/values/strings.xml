@@ -16,4 +16,5 @@
     <string name="record_drive">Record Drive</string>
     <string name="error_and_faults">Error And Faults</string>
     <string name="check_speed">Check Speed</string>
+    <string name="search_drives_by_date">Search Drives by Date</string>
 </resources>
