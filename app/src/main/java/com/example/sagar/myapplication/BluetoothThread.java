@@ -42,8 +42,8 @@ public class BluetoothThread extends Thread {
 
     private Drive drive;
 
-    public static final String API_ADDRESS = "192.168.0.192";
-//    public static final String API_ADDRESS = "138.197.167.62";
+//    public static final String API_ADDRESS = "192.168.0.192";
+    public static final String API_ADDRESS = "138.197.167.62";
 
 
     private static final Map<String, String> COMMANDS = new HashMap<>();
