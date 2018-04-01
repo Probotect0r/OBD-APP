@@ -47,22 +47,17 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
-
-        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 1);
-        } else {
-            setupBluetoothConnection();
-
-        }
-
         btn = view.findViewById(R.id.startStop);
         clock = view.findViewById(R.id.chronometerHome);
         driveListTitle = view.findViewById(R.id.txtDriveHome);
         scrollView = view.findViewById(R.id.scrollHome);
 
+        setupButtonListener();
+        enableBluetooth();
+        return view;
+    }
+
+    private void setupButtonListener() {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,8 +80,16 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+    }
 
-        return view;
+    private void enableBluetooth() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 1);
+        } else {
+            setupBluetoothConnection();
+        }
     }
 
     private void startDrive() {

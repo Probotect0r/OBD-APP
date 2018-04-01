@@ -20,4 +20,6 @@ public interface RetrieveService {
     @GET("data/{driveId}")
     Call<List<ProcessedMessage>> getData(@Path("driveId") String driveId);
 
+    @GET("drive/previous")
+    Call<Drive> getLastDrive();
 }
