@@ -350,9 +350,9 @@
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="loadErrorPage"
                     app:cardBackgroundColor="@color/veryRed"
-                    app:cardCornerRadius="30dp"
-                    android:onClick="loadErrorPage">
+                    app:cardCornerRadius="30dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"

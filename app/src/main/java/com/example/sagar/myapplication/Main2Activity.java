@@ -71,9 +71,6 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
             case R.id.navigation_home:
                 fragment = new HomeFragment();
                 break;
-            case R.id.navigation_dashboard:
-                fragment = new Dash_fragment();
-                break;
             case R.id.navigation_notifications:
                 fragment = new HistoricalFragment();
                 break;
