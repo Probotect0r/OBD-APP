@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -65,7 +63,7 @@ public class BluetoothThread implements Runnable {
 
     private void setupRetrofit() {
         this.retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + this.API_ADDRESS + ":8080/")
+                .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
