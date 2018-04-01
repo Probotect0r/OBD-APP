@@ -65,6 +65,8 @@ public class HomeFragment extends Fragment {
         fuelEconomy = view.findViewById(R.id.txtFuelEconomy);
         engineLoadChart = view.findViewById(R.id.homeEngineLoadChart);
 
+        if (bluetoothAdapter == null) { return view; }
+
         setupButtonListener();
         enableBluetooth();
         engineLoadChartData();
