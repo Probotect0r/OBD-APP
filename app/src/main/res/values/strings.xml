@@ -19,4 +19,5 @@
     <string name="search_drives_by_date">Search Drives by Date</string>
     <string name="throttle_position">Throttle Position</string>
     <string name="recent_drive">Recent Drive</string>
+    <string name="fuel_economy">Fuel Economy</string>
 </resources>

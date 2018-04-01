@@ -17,6 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,6 +49,8 @@ public class HomeFragment extends Fragment {
     private Chronometer clock;
     private TextView driveListTitle;
     private ScrollView scrollView;
+    private TextView fuelSystemStatus, fuelEconomy;
+    private LineChart engineLoadChart;
 
     @Nullable
     @Override
@@ -51,6 +60,9 @@ public class HomeFragment extends Fragment {
         clock = view.findViewById(R.id.chronometerHome);
         driveListTitle = view.findViewById(R.id.txtDriveHome);
         scrollView = view.findViewById(R.id.scrollHome);
+        fuelSystemStatus = view.findViewById(R.id.txtFuelSystemValue);
+        fuelEconomy = view.findViewById(R.id.txtFuelEconomy);
+        engineLoadChart = view.findViewById(R.id.homeEngineLoadChart);
 
         setupButtonListener();
         enableBluetooth();
@@ -119,6 +131,40 @@ public class HomeFragment extends Fragment {
                 .getLayoutParams();
         layoutParams.weight = val;
         scrollView.requestLayout();
+    }
+
+    //Change Fuel System Status
+    public void changeFuelSystemStatusValue(String status) { fuelSystemStatus.setText(status); }
+
+    //Change Fuel Economy Value
+    public void changeFuelEconomyValue (int val) { fuelEconomy.setText(val + "L/100 KM"); }
+
+    //populate Line chart for Engine Load
+    public void engineLoadChartData () {
+//        engineLoadChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) getContext());
+//        engineLoadChart.setOnChartGestureListener((OnChartGestureListener) getContext());
+
+        engineLoadChart.setPinchZoom(false);
+        engineLoadChart.setDragEnabled(false);
+        engineLoadChart.setScaleEnabled(false);
+
+        ArrayList <Entry> yValues = new ArrayList<>();
+
+        yValues.add(new Entry (0 ,1 ));
+        yValues.add(new Entry (1 ,3 ));
+        yValues.add(new Entry (2 ,5 ));
+
+
+        LineDataSet dataSet = new LineDataSet(yValues, "Data Set 1");
+        dataSet.setFillAlpha(110);
+
+        ArrayList <ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(dataSet);
+
+        LineData lineData = new LineData(dataSets);
+
+        engineLoadChart.setData(lineData);
+
     }
 
     public void setupBluetoothConnection() {
