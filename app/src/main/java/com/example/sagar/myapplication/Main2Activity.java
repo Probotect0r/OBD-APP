@@ -21,13 +21,6 @@ import java.util.UUID;
 
 public class Main2Activity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
-    private BluetoothAdapter bluetoothAdapter;
-    private UUID uuid = UUID.randomUUID();
-    private static final String TAG = "MY_APP_DEBUG_TAG";
-
-    private BluetoothThread thread;
-//    private final String BLUETOOTH_DEVICE = "sagarpi";
-    private final String BLUETOOTH_DEVICE = "DESKTOP-46PD4HS";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,18 +30,6 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
         navigation.setOnNavigationItemSelectedListener(this);
         loadFragment(new HomeFragment());
 
-        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (this.bluetoothAdapter == null) {
-            return;
-        }
-
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 1);
-        } else {
-            this.setupBluetoothConnection();
-
-        }
     }
 
     private boolean loadFragment (Fragment fragment) {
@@ -118,40 +99,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
     }
 
     @Override
-    public void onActivityResult(int reqCode, int resultCode, Intent data) {
-        System.out.println("Activity Result" + reqCode);
-        if (resultCode == RESULT_CANCELED) {
-            System.out.println("Bluetooth not enabled.");
-        } else {
-            System.out.println("Bluetooth enabled!");
-            this.setupBluetoothConnection();
-        }
-    }
-
-    public void setupBluetoothConnection() {
-        Log.d(TAG, "Looking for bluetooth device.");
-        Set<BluetoothDevice> pairedDevices = this.bluetoothAdapter.getBondedDevices();
-
-        if (pairedDevices.size() > 0) {
-            Log.d(TAG, "Found list of paired devices.");
-
-            for (BluetoothDevice device : pairedDevices) {
-                String deviceName = device.getName();
-                Log.d(TAG, "Device: " + deviceName);
-
-                if (deviceName.equals(BLUETOOTH_DEVICE)) {
-                    Log.d(TAG, "Found bluetooth device, starting bluetooth thread.");
-                    thread = new BluetoothThread(device);
-                    new Thread(thread).start();
-                }
-            }
-        }
-    }
-
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
-        this.thread.setContinuePolling(false);
     }
 }

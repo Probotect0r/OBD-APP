@@ -128,6 +128,8 @@ public class BluetoothThread implements Runnable {
             this.executeCommandsOnSystem();
             this.sleep();
         }
+        closeSocket();
+        endDrive();
     }
 
     private void executeCommandsOnSystem() {
@@ -219,4 +221,17 @@ public class BluetoothThread implements Runnable {
         this.continuePolling = continuePolling;
     }
 
+    private void closeSocket() {
+        try {
+            bluetoothSocket.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error closing socket", e);
+        }
+    }
+
+    private void endDrive() {
+        Log.d(TAG, "Ending drive.");
+        Call<Drive> call = this.postService.endDrive(drive.getId());
+        executeCall(call);
+    }
 }
