@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by sagar on 11/25/17.
  */
 
-public class BluetoothThread extends Thread {
+public class BluetoothThread implements Runnable {
     // The UUID of the SerialPort bluetooth service
     UUID SERIAL_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
@@ -42,8 +42,8 @@ public class BluetoothThread extends Thread {
 
     private Drive drive;
 
-//    public static final String API_ADDRESS = "192.168.0.192";
-    public static final String API_ADDRESS = "138.197.167.62";
+    public static final String API_ADDRESS = "192.168.0.193";
+//    public static final String API_ADDRESS = "138.197.167.62";
 
 
     private static final Map<String, String> COMMANDS = new HashMap<>();
@@ -119,19 +119,9 @@ public class BluetoothThread extends Thread {
     private void createNewDrive() {
         Log.d(TAG, "Creating new Drive.");
         Call<Drive> call = this.postService.createDrive();
-        call.enqueue(new Callback<Drive>() {
-            @Override
-            public void onResponse(Call<Drive> call, Response<Drive> response) {
-                drive = response.body();
-                Log.d(TAG, "Created drive with id: " + drive.getId());
-                pollDevice();
-            }
-
-            @Override
-            public void onFailure(Call<Drive> call, Throwable t) {
-                Log.e(TAG, "Error creating drive: ", t);
-            }
-        });
+        drive = executeCall(call);
+        Log.d(TAG, "Created drive with id: " + drive.getId());
+        pollDevice();
     }
 
     private void pollDevice() {
@@ -194,16 +184,7 @@ public class BluetoothThread extends Thread {
 
     private void sendMessageToServer(RawMessage rawMessage) {
         Call<RawMessage> call = this.postService.createMessage(rawMessage);
-        call.enqueue(new Callback<RawMessage>() {
-            @Override
-            public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {}
-
-            @Override
-            public void onFailure(Call<RawMessage> call, Throwable t) {
-                Log.e(TAG, "Error sending message to server: " + t);
-            }
-        });
-
+        executeCall(call);
     }
 
     private void sleep() {
@@ -212,7 +193,6 @@ public class BluetoothThread extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     private void flushOutputstream() {
@@ -224,6 +204,14 @@ public class BluetoothThread extends Thread {
 
     }
 
+    private <T> T executeCall(Call<T> call) {
+        try {
+            return call.execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Could not execute call: ", e);
+            throw new RuntimeException("Could not execute call", e);
+        }
+    }
     public boolean isContinuePolling() {
         return continuePolling;
     }
@@ -231,4 +219,5 @@ public class BluetoothThread extends Thread {
     public synchronized void setContinuePolling(boolean continuePolling) {
         this.continuePolling = continuePolling;
     }
+
 }

@@ -26,7 +26,8 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
     private static final String TAG = "MY_APP_DEBUG_TAG";
 
     private BluetoothThread thread;
-
+//    private final String BLUETOOTH_DEVICE = "sagarpi";
+    private final String BLUETOOTH_DEVICE = "DESKTOP-46PD4HS";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,10 +142,10 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
                 String deviceName = device.getName();
                 Log.d(TAG, "Device: " + deviceName);
 
-                if (deviceName.equals("DESKTOP-46PD4HS")) {
-                    Log.d(TAG, "Found Sagar's Laptop, starting bluetooth thread.");
-                    this.thread = new BluetoothThread(device);
-                    this.thread.start();
+                if (deviceName.equals(BLUETOOTH_DEVICE)) {
+                    Log.d(TAG, "Found bluetooth device, starting bluetooth thread.");
+                    thread = new BluetoothThread(device);
+                    new Thread(thread).start();
                 }
             }
         }
