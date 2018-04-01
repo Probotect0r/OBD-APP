@@ -3,6 +3,7 @@ package com.example.sagar.myapplication;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -66,6 +67,7 @@ public class HomeFragment extends Fragment {
 
         setupButtonListener();
         enableBluetooth();
+        engineLoadChartData();
         return view;
     }
 
@@ -141,8 +143,6 @@ public class HomeFragment extends Fragment {
 
     //populate Line chart for Engine Load
     public void engineLoadChartData () {
-//        engineLoadChart.setOnChartValueSelectedListener((OnChartValueSelectedListener) getContext());
-//        engineLoadChart.setOnChartGestureListener((OnChartGestureListener) getContext());
 
         engineLoadChart.setPinchZoom(false);
         engineLoadChart.setDragEnabled(false);
@@ -155,11 +155,20 @@ public class HomeFragment extends Fragment {
         yValues.add(new Entry (2 ,5 ));
 
 
-        LineDataSet dataSet = new LineDataSet(yValues, "Data Set 1");
-        dataSet.setFillAlpha(110);
+        LineDataSet lineDataSet = new LineDataSet(yValues, "Data Set 1");
+        lineDataSet.setLineWidth(3);
+        lineDataSet.setValueTextSize(0);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setCircleColor(Color.BLACK);
+        lineDataSet.setCircleRadius(4);
+        lineDataSet.setCircleHoleRadius(3);
+        lineDataSet.setHighLightColor(Color.RED);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setDrawCircles(false);
+
 
         ArrayList <ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(dataSet);
+        dataSets.add(lineDataSet);
 
         LineData lineData = new LineData(dataSets);
 
