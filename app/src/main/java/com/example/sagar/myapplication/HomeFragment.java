@@ -81,12 +81,13 @@ public class HomeFragment extends Fragment {
         fuelEconomy = view.findViewById(R.id.txtFuelEconomy);
         engineLoadChart = view.findViewById(R.id.homeEngineLoadChart);
 
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) { return view; }
 
         setupButtonListener();
         setupRetrofit();
         enableBluetooth();
-        engineLoadChartData();
+        queryPreviousDrive();
         return view;
     }
 
@@ -125,7 +126,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void enableBluetooth() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 1);
@@ -164,13 +164,13 @@ public class HomeFragment extends Fragment {
     }
 
     //Change Fuel System Status
-    public void changeFuelSystemStatusValue(String status) { fuelSystemStatus.setText(status); }
+    public void setFuelSystemStatus(String status) { fuelSystemStatus.setText(status); }
 
     //Change Fuel Economy Value
-    public void changeFuelEconomyValue (int val) { fuelEconomy.setText(val + "L/100 KM"); }
+    public void setFuelEconomy (int val) { fuelEconomy.setText(val + "L/100 KM"); }
 
     //populate Line chart for Engine Load
-    public void engineLoadChartData () {
+    public void populateEngineLoadChart() {
 
         engineLoadChart.setPinchZoom(false);
         engineLoadChart.setDragEnabled(false);
@@ -241,6 +241,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<Drive> call, Response<Drive> response) {
                 drive = response.body();
+                getPreviousDriveData();
             }
 
             @Override
@@ -256,6 +257,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
                 messages = response.body();
+                populateValues();
             }
 
             @Override
@@ -263,5 +265,9 @@ public class HomeFragment extends Fragment {
                 Log.e(TAG, "Couldn't retrieve previous drive", t);
             }
         });
+    }
+
+    private void populateValues() {
+        populateEngineLoadChart();
     }
 }
