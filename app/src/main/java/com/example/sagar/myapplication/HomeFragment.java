@@ -25,8 +25,18 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
+import com.example.sagar.myapplication.model.Drive;
+import com.example.sagar.myapplication.model.ProcessedMessage;
+
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_CANCELED;
 
@@ -39,8 +49,14 @@ public class HomeFragment extends Fragment {
     private UUID uuid = UUID.randomUUID();
     private static final String TAG = "MY_APP_DEBUG_TAG";
 
+    private Retrofit retrofit;
+    private RetrieveService retrieveService;
+
     private BluetoothThread thread;
     private BluetoothDevice bluetoothDevice;
+
+    private Drive drive;
+    private List<ProcessedMessage> messages;
 
     //    private final String BLUETOOTH_DEVICE = "sagarpi";
     private final String BLUETOOTH_DEVICE = "DESKTOP-46PD4HS";
@@ -68,6 +84,7 @@ public class HomeFragment extends Fragment {
         if (bluetoothAdapter == null) { return view; }
 
         setupButtonListener();
+        setupRetrofit();
         enableBluetooth();
         engineLoadChartData();
         return view;
@@ -96,6 +113,15 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void setupRetrofit() {
+        this.retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        this.retrieveService = retrofit.create(RetrieveService.class);
     }
 
     private void enableBluetooth() {
@@ -207,5 +233,35 @@ public class HomeFragment extends Fragment {
             System.out.println("Bluetooth enabled!");
             this.setupBluetoothConnection();
         }
+    }
+
+    private void queryPreviousDrive() {
+        Call<Drive> call = this.retrieveService.getLastDrive();
+        call.enqueue(new Callback<Drive>() {
+            @Override
+            public void onResponse(Call<Drive> call, Response<Drive> response) {
+                drive = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<Drive> call, Throwable t) {
+                Log.e(TAG, "Couldn't retrieve previous drive", t);
+            }
+        });
+    }
+
+    private void getPreviousDriveData() {
+        Call<List<ProcessedMessage>> call = this.retrieveService.getData(drive.getId());
+        call.enqueue(new Callback<List<ProcessedMessage>>() {
+            @Override
+            public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
+                messages = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<List<ProcessedMessage>> call, Throwable t) {
+                Log.e(TAG, "Couldn't retrieve previous drive", t);
+            }
+        });
     }
 }
