@@ -22,4 +22,7 @@ public interface RetrieveService {
 
     @GET("drive/previous")
     Call<Drive> getLastDrive();
+
+    @GET("data/latest/")
+    Call<ProcessedMessage> getLatestMessage();
 }

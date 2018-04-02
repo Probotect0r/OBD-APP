@@ -56,8 +56,10 @@ public class HomeFragment extends Fragment {
     private BluetoothThread thread;
     private BluetoothDevice bluetoothDevice;
 
-    private Drive drive;
-    private List<ProcessedMessage> messages;
+    private Drive previousDrive;
+    private Drive currentDrive;
+    private List<ProcessedMessage> previousMessages;
+    private List<ProcessedMessage> currentMessages;
 
     //    private final String BLUETOOTH_DEVICE = "sagarpi";
     private final String BLUETOOTH_DEVICE = "DESKTOP-46PD4HS";
@@ -72,7 +74,13 @@ public class HomeFragment extends Fragment {
     private LineChart engineLoadChart;
     private LineDataSet lineDataSet;
     private LineData lineData;
+
     public CardView speed, throttlePosition, rpm, coolantTemp, fuelPressure, maf;
+
+    private ArrayList<Entry> previousValues = new ArrayList<>();
+    private ArrayList<Entry> currentValues = new ArrayList<>();
+
+    private Thread pollingThread;
 
     @Nullable
     @Override
@@ -130,6 +138,14 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    public void changeScrollViewWeight (int val) {
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) scrollView
+                .getLayoutParams();
+        layoutParams.weight = val;
+        scrollView.requestLayout();
+    }
+
+
     private void setupRetrofit() {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
@@ -170,56 +186,16 @@ public class HomeFragment extends Fragment {
         long elapsedMills = SystemClock.elapsedRealtime() - clock.getBase();
     }
 
-    public void changeScrollViewWeight (int val) {
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) scrollView
-                .getLayoutParams();
-        layoutParams.weight = val;
-        scrollView.requestLayout();
-    }
 
-    public void setFuelSystemStatus(String status) { fuelSystemStatus.setText(status); }
-
-    public void setFuelEconomy (double val) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        fuelEconomy.setText(df.format(val) + "L/100 KM");
-    }
-
-    public void populateEngineLoadChart() {
-        if(messages.size() == 0) {
-            return;
+    @Override
+    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+        System.out.println("Activity Result" + reqCode);
+        if (resultCode == RESULT_CANCELED) {
+            System.out.println("Bluetooth not enabled.");
+        } else {
+            System.out.println("Bluetooth enabled!");
+            setupBluetoothConnection();
         }
-
-        engineLoadChart.setPinchZoom(false);
-        engineLoadChart.setDragEnabled(false);
-        engineLoadChart.setScaleEnabled(false);
-
-        Description description = new Description();
-        description.setText("");
-        engineLoadChart.setDescription(description);
-        engineLoadChart.getLegend().setEnabled(false);
-
-        ArrayList <Entry> values = new ArrayList<>();
-
-        for(int i = 0; i < messages.size(); i++) {
-            ProcessedMessage message = messages.get(i);
-            Double val = (Double) message.getValues().get("THROTTLE_POSITION");
-
-            values.add(new Entry(i,val.floatValue()));
-        }
-
-        lineDataSet = new LineDataSet(values, "Data Set 1");
-        lineDataSet.setLineWidth(3);
-        lineDataSet.setValueTextSize(0);
-        lineDataSet.setDrawFilled(true);
-        lineDataSet.setCircleColor(Color.BLACK);
-        lineDataSet.setCircleRadius(4);
-        lineDataSet.setCircleHoleRadius(3);
-        lineDataSet.setHighLightColor(Color.RED);
-        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        lineDataSet.setDrawCircles(false);
-
-        lineData = new LineData(lineDataSet);
-        engineLoadChart.setData(lineData);
     }
 
     public void setupBluetoothConnection() {
@@ -242,23 +218,12 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int reqCode, int resultCode, Intent data) {
-        System.out.println("Activity Result" + reqCode);
-        if (resultCode == RESULT_CANCELED) {
-            System.out.println("Bluetooth not enabled.");
-        } else {
-            System.out.println("Bluetooth enabled!");
-            this.setupBluetoothConnection();
-        }
-    }
-
     private void queryPreviousDrive() {
         Call<Drive> call = this.retrieveService.getLastDrive();
         call.enqueue(new Callback<Drive>() {
             @Override
             public void onResponse(Call<Drive> call, Response<Drive> response) {
-                drive = response.body();
+                previousDrive = response.body();
                 getPreviousDriveData();
             }
 
@@ -270,13 +235,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void getPreviousDriveData() {
-        Call<List<ProcessedMessage>> call = this.retrieveService.getData(drive.getId());
+        Call<List<ProcessedMessage>> call = this.retrieveService.getData(previousDrive.getId());
         call.enqueue(new Callback<List<ProcessedMessage>>() {
             @Override
             public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
-                Log.d(TAG, "Getting data for: " + drive.getId());
-                messages = response.body();
-                Log.d(TAG, "Got previous data: " + messages.size() + " messages");
+                Log.d(TAG, "Getting data for: " + previousDrive.getId());
+                previousMessages = response.body();
+                Log.d(TAG, "Got previous data: " + previousMessages.size() + " messages");
                 populateValues();
             }
 
@@ -288,12 +253,62 @@ public class HomeFragment extends Fragment {
     }
 
     private void populateValues() {
-        populateEngineLoadChart();
+        populateEngineLoadChartWithPreviousData();
         redrawChart();
-        setFuelSystemStatus(messages.get(0).getValues().get("FUEL_SYSTEM_STATUS").toString());
+        setFuelSystemStatus(previousMessages.get(0).getValues().get("FUEL_SYSTEM_STATUS").toString());
 
-        double fuelEcon = (double) messages.get(0).getValues().get("FUEL_ECONOMY");
-        setFuelEconomy(fuelEcon);
+        Object econValue = previousMessages.get(0).getValues().get("FUEL_ECONOMY");
+        System.out.println(econValue);
+        if(econValue.toString().equals("Infinity")) {
+            Log.d(TAG, "Infinity econ detected");
+            setFuelEconomy(12);
+        } else {
+            double fuelEcon = (double) econValue;
+            setFuelEconomy(fuelEcon);
+        }
+    }
+
+    public void setFuelSystemStatus(String status) { fuelSystemStatus.setText(status); }
+
+    public void setFuelEconomy (double val) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        fuelEconomy.setText(df.format(val) + "L/100 KM");
+    }
+
+    public void populateEngineLoadChartWithPreviousData() {
+        if(previousMessages.size() == 0) {
+            return;
+        }
+
+        engineLoadChart.setPinchZoom(false);
+        engineLoadChart.setDragEnabled(false);
+        engineLoadChart.setScaleEnabled(false);
+
+        Description description = new Description();
+        description.setText("");
+        engineLoadChart.setDescription(description);
+        engineLoadChart.getLegend().setEnabled(false);
+
+        for(int i = 0; i < previousMessages.size(); i++) {
+            ProcessedMessage message = previousMessages.get(i);
+            Double val = (Double) message.getValues().get("THROTTLE_POSITION");
+
+            this.previousValues.add(new Entry(i,val.floatValue()));
+        }
+
+        lineDataSet = new LineDataSet(this.previousValues, "Data Set 1");
+        lineDataSet.setLineWidth(3);
+        lineDataSet.setValueTextSize(0);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setCircleColor(Color.BLACK);
+        lineDataSet.setCircleRadius(4);
+        lineDataSet.setCircleHoleRadius(3);
+        lineDataSet.setHighLightColor(Color.RED);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setDrawCircles(false);
+
+        lineData = new LineData(lineDataSet);
+        engineLoadChart.setData(lineData);
     }
 
     private void redrawChart() {
@@ -301,15 +316,41 @@ public class HomeFragment extends Fragment {
             return;
         }
 
+        Log.d(TAG, "Redrawing chart");
         engineLoadChart.post(() -> {
             lineData.notifyDataChanged();
             engineLoadChart.notifyDataSetChanged();
             engineLoadChart.invalidate();
         });
-
     }
 
-    //Onclick handlers for feature Cards
+    private void pollCurrentData() {
+        lineDataSet.clear();
+        pollingThread = new Thread(() -> {
+            System.out.println("Started polling thread.");
+            while (isDriving) {
+                Call<ProcessedMessage> call = this.retrieveService.getLatestMessage();
+                call.enqueue(new Callback<ProcessedMessage>() {
 
+                    @Override
+                    public void onResponse(Call<ProcessedMessage> call, Response<ProcessedMessage> response) {
+                        ProcessedMessage message = response.body();
+                        Double val = (Double) message.getValues().get("THROTTLE_POSITION");
+                        lineDataSet.addEntry(new Entry(previousValues.size(), val.floatValue()));
 
+                        redrawChart();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProcessedMessage> call, Throwable t) {}
+                });
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }
