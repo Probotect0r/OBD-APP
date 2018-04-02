@@ -236,4 +236,12 @@ public class BluetoothThread implements Runnable {
         Call<Drive> call = this.postService.endDrive(drive.getId());
         executeCall(call);
     }
+
+    public Drive getDrive() {
+        return drive;
+    }
+
+    public void setDrive(Drive drive) {
+        this.drive = drive;
+    }
 }
