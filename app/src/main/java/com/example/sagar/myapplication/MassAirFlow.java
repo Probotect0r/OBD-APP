@@ -3,6 +3,7 @@ package com.example.sagar.myapplication;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.sagar.myapplication.model.ProcessedMessage;
@@ -16,12 +17,25 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class MassAirFlow extends AppCompatActivity {
+    private static final String TAG = "MY_APP_DEBUG_TAG";
 
     private TextView avg, median;
     private LineChart chart;
+    private LineDataSet lineDataSet;
+    private LineData lineData;
+
     private List<ProcessedMessage> messages;
+
+    private Retrofit retrofit;
+    private RetrieveService retrieveService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +46,36 @@ public class MassAirFlow extends AppCompatActivity {
         median = findViewById(R.id.txtMedianVal);
         chart = findViewById(R.id.mafChart);
 
+        setupRetrofit();
         setupChart();
+        getLastestMessages();
 
+    }
+
+    private void setupRetrofit() {
+        this.retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        this.retrieveService = retrofit.create(RetrieveService.class);
+    }
+
+    private void getLastestMessages() {
+        Call<List<ProcessedMessage>> call = retrieveService.getLastTenMessages();
+
+        call.enqueue(new Callback<List<ProcessedMessage>>() {
+            @Override
+            public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
+                messages = response.body();
+                Log.d(TAG, "Got messages: " + messages.size());
+                loadChart();
+            }
+
+            @Override
+            public void onFailure(Call<List<ProcessedMessage>> call, Throwable t) {
+            }
+        });
     }
 
     public void setupChart() {
@@ -47,24 +89,41 @@ public class MassAirFlow extends AppCompatActivity {
         chart.getLegend().setEnabled(false);
 
 
-        ArrayList<Entry> yValues = new ArrayList<Entry>();
-        yValues.add(new Entry(0,1));
+        ArrayList<Entry> values = new ArrayList<Entry>();
+        values.add(new Entry(0,0));
 
-        LineDataSet set = new LineDataSet(yValues, "MAF Data");
-        set.setLineWidth(3);
-        set.setValueTextSize(0);
-        set.setDrawFilled(true);
-        set.setCircleColor(Color.BLACK);
-        set.setCircleRadius(4);
-        set.setCircleHoleRadius(3);
-        set.setHighLightColor(Color.RED);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setDrawCircles(false);
+        lineDataSet = new LineDataSet(values, "MAF Data");
+        lineDataSet.setLineWidth(3);
+        lineDataSet.setValueTextSize(0);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setCircleColor(Color.BLACK);
+        lineDataSet.setCircleRadius(4);
+        lineDataSet.setCircleHoleRadius(3);
+        lineDataSet.setHighLightColor(Color.RED);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setDrawCircles(false);
 
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set);
-        LineData data = new LineData(dataSets);
+        lineData = new LineData(lineDataSet);
+        chart.setData(lineData);
+    }
 
-        chart.setData(data);
+    private void loadChart() {
+        lineDataSet.clear();
+        for(int i = 0; i < messages.size(); i++) {
+            ProcessedMessage message = messages.get(i);
+            Double val = (Double) message.getValues().get("MAF");
+            lineDataSet.addEntry(new Entry(i, val.floatValue()));
+        }
+
+        redrawChart();
+    }
+
+    private void redrawChart() {
+
+        chart.post(() -> {
+            lineData.notifyDataChanged();
+            chart.notifyDataSetChanged();
+            chart.invalidate();
+        });
     }
 }

@@ -25,4 +25,7 @@ public interface RetrieveService {
 
     @GET("data/latest/")
     Call<ProcessedMessage> getLatestMessage();
+
+    @GET("data/latest/ten")
+    Call<List<ProcessedMessage>> getLastTenMessages();
 }
