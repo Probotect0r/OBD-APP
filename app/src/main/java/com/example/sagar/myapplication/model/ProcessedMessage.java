@@ -3,15 +3,15 @@ package com.example.sagar.myapplication.model;
 import java.util.Map;
 
 public class ProcessedMessage {
-    private Map<String, Integer> values;
+    private Map<String, Object> values;
 
     public ProcessedMessage() {}
 
-    public Map<String, Integer> getValues() {
+    public Map<String, Object> getValues() {
         return values;
     }
 
-    public void setValues(Map<String, Integer> values) {
+    public void setValues(Map<String, Object> values) {
         this.values = values;
     }
 }

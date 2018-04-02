@@ -49,11 +49,13 @@ public class BluetoothThread implements Runnable {
     static {
         COMMANDS.put("RPM", "010C\r");
         COMMANDS.put("THROTTLE_POSITION", "0111\r");
+        COMMANDS.put("ENGINE_LOAD", "0104\r");
         COMMANDS.put("SPEED", "010D\r");
         COMMANDS.put("COOLANT_TEMPERATURE", "0105\r");
         COMMANDS.put("FUEL_PRESSURE", "010A\r");
         COMMANDS.put("MAF", "0110\r");
-        COMMANDS.put("FUEL_RATE", "015E\r");
+//        COMMANDS.put("FUEL_RATE", "015E\r");
+        COMMANDS.put("FUEL_SYSTEM_STATUS", "0103\r");
     }
 
     public BluetoothThread(BluetoothDevice device) {
