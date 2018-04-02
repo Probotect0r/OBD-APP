@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -78,7 +79,6 @@ public class HomeFragment extends Fragment {
     public CardView speed, throttlePosition, rpm, coolantTemp, fuelPressure, maf;
 
     private ArrayList<Entry> previousValues = new ArrayList<>();
-    private ArrayList<Entry> currentValues = new ArrayList<>();
 
     private Thread pollingThread;
 
@@ -145,7 +145,6 @@ public class HomeFragment extends Fragment {
         scrollView.requestLayout();
     }
 
-
     private void setupRetrofit() {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
@@ -168,6 +167,7 @@ public class HomeFragment extends Fragment {
         thread = new BluetoothThread(bluetoothDevice);
         new Thread(thread).start();
         startClock();
+        pollCurrentData();
     }
 
     private void stopDrive() {
@@ -258,7 +258,6 @@ public class HomeFragment extends Fragment {
         setFuelSystemStatus(previousMessages.get(0).getValues().get("FUEL_SYSTEM_STATUS").toString());
 
         Object econValue = previousMessages.get(0).getValues().get("FUEL_ECONOMY");
-        System.out.println(econValue);
         if(econValue.toString().equals("Infinity")) {
             Log.d(TAG, "Infinity econ detected");
             setFuelEconomy(12);
@@ -266,6 +265,10 @@ public class HomeFragment extends Fragment {
             double fuelEcon = (double) econValue;
             setFuelEconomy(fuelEcon);
         }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy, h:mm a");
+        String dateString = simpleDateFormat.format(previousDrive.getStart());
+        dateTitle.setText(dateString);
     }
 
     public void setFuelSystemStatus(String status) { fuelSystemStatus.setText(status); }
@@ -312,11 +315,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void redrawChart() {
+        Log.d(TAG, "Redrawing chart");
         if(lineData == null) {
             return;
         }
+        Log.d(TAG, "Redrawing chart 2");
 
-        Log.d(TAG, "Redrawing chart");
         engineLoadChart.post(() -> {
             lineData.notifyDataChanged();
             engineLoadChart.notifyDataSetChanged();
@@ -337,8 +341,18 @@ public class HomeFragment extends Fragment {
                         ProcessedMessage message = response.body();
                         Double val = (Double) message.getValues().get("THROTTLE_POSITION");
                         lineDataSet.addEntry(new Entry(previousValues.size(), val.floatValue()));
-
                         redrawChart();
+
+                        Object econValue = message.getValues().get("FUEL_ECONOMY");
+                        if(econValue.toString().equals("Infinity")) {
+                            Log.d(TAG, "Infinity econ detected");
+                            setFuelEconomy(12);
+                        } else {
+                            double fuelEcon = (double) econValue;
+                            setFuelEconomy(fuelEcon);
+                        }
+
+                        setFuelSystemStatus(message.getValues().get("FUEL_SYSTEM_STATUS").toString());
                     }
 
                     @Override
@@ -352,5 +366,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+
+        pollingThread.start();
     }
 }
