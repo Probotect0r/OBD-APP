@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.example.sagar.myapplication.model.Drive;
 import com.example.sagar.myapplication.model.ProcessedMessage;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -70,6 +72,7 @@ public class HomeFragment extends Fragment {
     private LineChart engineLoadChart;
     private LineDataSet lineDataSet;
     private LineData lineData;
+    public CardView speed, throttlePosition, rpm, coolantTemp, fuelPressure, maf;
 
     @Nullable
     @Override
@@ -83,6 +86,14 @@ public class HomeFragment extends Fragment {
         fuelEconomy = view.findViewById(R.id.txtFuelEconomy);
         engineLoadChart = view.findViewById(R.id.homeEngineLoadChart);
         dateTitle = view.findViewById(R.id.txtDriveHomeDate);
+
+        //Feature Cards
+        speed = view.findViewById(R.id.speedCard);
+        throttlePosition = view.findViewById(R.id.throttlePositionCard);
+        rpm = view.findViewById(R.id.rpmCard);
+        coolantTemp = view.findViewById(R.id.coolantTempCard);
+        fuelPressure = view.findViewById(R.id.fuelPressureCard);
+        maf = view.findViewById(R.id.mafCard);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) { return view; }
@@ -181,6 +192,11 @@ public class HomeFragment extends Fragment {
         engineLoadChart.setPinchZoom(false);
         engineLoadChart.setDragEnabled(false);
         engineLoadChart.setScaleEnabled(false);
+
+        Description description = new Description();
+        description.setText("");
+        engineLoadChart.setDescription(description);
+        engineLoadChart.getLegend().setEnabled(false);
 
         ArrayList <Entry> values = new ArrayList<>();
 
@@ -292,5 +308,8 @@ public class HomeFragment extends Fragment {
         });
 
     }
+
+    //Onclick handlers for feature Cards
+
 
 }

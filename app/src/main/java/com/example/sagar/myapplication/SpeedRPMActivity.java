@@ -1,4 +1,4 @@
-package com.example.sagar.myapplication.RPM;
+package com.example.sagar.myapplication;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -6,8 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.example.sagar.myapplication.BluetoothThread;
-import com.example.sagar.myapplication.R;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;

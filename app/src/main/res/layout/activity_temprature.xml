@@ -29,12 +29,12 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/appbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
-        android:text="Engine Load"
+        android:text="Coolant Temp"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold" />

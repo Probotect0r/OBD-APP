@@ -66,15 +66,16 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:gravity="">
 
                             <ImageView
                                 android:id="@+id/imgFuelSystem"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
+                                android:layout_marginBottom="5dp"
                                 android:layout_marginStart="8dp"
                                 android:layout_marginTop="16dp"
-                                android:layout_marginBottom="5dp"
                                 android:background="@drawable/bgcirclegrey"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_pump"
@@ -83,7 +84,7 @@
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginBottom="8dp"
@@ -96,6 +97,13 @@
                                 app:layout_constraintStart_toEndOf="@+id/imgFuelSystem"
                                 app:layout_constraintTop_toTopOf="parent" />
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@color/lightGray" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -164,13 +172,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center"
                                 android:layout_marginBottom="8dp"
                                 android:layout_marginStart="16dp"
                                 android:layout_marginTop="8dp"
                                 android:text="@string/fuel_economy"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
-                                android:layout_gravity="center"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toEndOf="@+id/imageView"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -293,12 +301,14 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/speedCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="30dp">
+                    app:cardCornerRadius="30dp"
+                    android:onClick="showSpeedActivity">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -337,12 +347,14 @@
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/throttlePositionCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="30dp">
+                    app:cardCornerRadius="30dp"
+                    android:onClick="showThrottlePosition">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -389,12 +401,14 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/rpmCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="30dp">
+                    app:cardCornerRadius="30dp"
+                    android:onClick="showRpmActivity">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -433,12 +447,14 @@
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/coolantTempCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="30dp">
+                    app:cardCornerRadius="30dp"
+                    android:onClick="showTempActivity">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -485,12 +501,14 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/fuelPressureCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="30dp">
+                    app:cardCornerRadius="30dp"
+                    android:onClick="showFuelPressure">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -529,12 +547,14 @@
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/mafCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="30dp">
+                    app:cardCornerRadius="30dp"
+                    android:onClick="showMAF">
 
                     <LinearLayout
                         android:layout_width="match_parent"

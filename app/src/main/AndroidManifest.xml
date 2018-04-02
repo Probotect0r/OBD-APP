@@ -13,13 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".RPM.RpmActivity"
+            android:name=".RpmActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TemperatureActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RPM.SpeedRPMActivity"
+            android:name=".SpeedRPMActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Main2Activity"
@@ -34,7 +34,10 @@
             android:name=".RecentDriveInfo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DriveByDate" />
-        <activity android:name=".ViewErrorCodes"></activity>
+        <activity android:name=".ViewErrorCodes" />
+        <activity android:name=".ThrottlePosition" />
+        <activity android:name=".MassAirFlow" />
+        <activity android:name=".FuelPressure"></activity>
     </application>
 
 </manifest>

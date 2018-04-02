@@ -1,23 +1,14 @@
 package com.example.sagar.myapplication;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.example.sagar.myapplication.RPM.RpmActivity;
-import com.example.sagar.myapplication.RPM.SpeedRPMActivity;
-
-import java.util.Set;
-import java.util.UUID;
 
 public class Main2Activity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -61,20 +52,37 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
     }
 
     //UI Activities
-    public void showFuelActivity(View view) {
-        Intent showFuelActivity = new Intent (this, RpmActivity.class);
-        startActivity(showFuelActivity);
-    }
-
-    public void showTempActivity(View view) {
-        Intent showFuelActivity = new Intent (this, TemperatureActivity.class);
-        startActivity(showFuelActivity);
-    }
 
     public void showSpeedActivity(View view) {
         Intent showFuelActivity = new Intent (this, SpeedRPMActivity.class);
         startActivity(showFuelActivity);
     }
+
+    public void showThrottlePosition (View view) {
+        Intent showThrottlePosition = new Intent (this, ThrottlePosition.class);
+        startActivity(showThrottlePosition);
+    }
+
+    public void showRpmActivity(View view) {
+        Intent showRPMActivity = new Intent (this, RpmActivity.class);
+        startActivity(showRPMActivity);
+    }
+
+    public void showTempActivity(View view) {
+        Intent showTempActivity = new Intent (this, TemperatureActivity.class);
+        startActivity(showTempActivity);
+    }
+
+    public void showFuelPressure (View view) {
+        Intent showFuelPressure = new Intent (this, FuelPressure.class);
+        startActivity(showFuelPressure);
+    }
+
+    public void showMAF (View view) {
+        Intent showMAF = new Intent (this, MassAirFlow.class);
+        startActivity(showMAF);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
