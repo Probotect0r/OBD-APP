@@ -6,11 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by achal on 2018-03-29.
  */
 
 public class ErrorCode_RecyclerView_adapter extends RecyclerView.Adapter<ErrorCode_RecyclerView_adapter.ViewHolder> {
+
+    private ArrayList<ErrorCard> errorList;
+
+    public ErrorCode_RecyclerView_adapter(ArrayList<ErrorCard> errors) {
+        errorList = errors;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -20,7 +28,6 @@ public class ErrorCode_RecyclerView_adapter extends RecyclerView.Adapter<ErrorCo
 
         public ViewHolder(View v) {
             super(v);
-            view = v;
             errorCode = v.findViewById(R.id.txtErrorCode);
             errorDesc = v.findViewById(R.id.txtErrorDescription);
         }
@@ -35,12 +42,14 @@ public class ErrorCode_RecyclerView_adapter extends RecyclerView.Adapter<ErrorCo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.errorCode.setText("Error: " + "1234");
-        holder.errorDesc.setText("Description: " + "Dummy Error");
+        ErrorCard currentItem = errorList.get(position);
+
+        holder.errorCode.setText("Error Code: " + currentItem.getErrorNum());
+        holder.errorDesc.setText("Description: " + currentItem.getErrorDesc());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return errorList.size();
     }
 }

@@ -93,7 +93,7 @@ public class RecentDriveInfo extends AppCompatActivity {
     }
 
     public void loadErrorPage(View view) {
-        Intent i = new Intent();
+        Intent i = new Intent(this, ViewErrorCodes.class);
         startActivity(i);
     }
 }

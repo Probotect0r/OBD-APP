@@ -11,14 +11,15 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_weight="20"
         android:textSize="24sp"
         android:textAlignment="center"
         android:textStyle="bold"
-        android:text="Error and Fault Codes"
+        android:text="@string/error_and_fault_codes"
         android:layout_margin="10dp"/>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/errorCardsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="80">
