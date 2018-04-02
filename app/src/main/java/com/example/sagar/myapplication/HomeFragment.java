@@ -18,16 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.sagar.myapplication.model.Drive;
+import com.example.sagar.myapplication.model.ProcessedMessage;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import com.example.sagar.myapplication.model.Drive;
-import com.example.sagar.myapplication.model.ProcessedMessage;
-
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -67,7 +66,10 @@ public class HomeFragment extends Fragment {
     private TextView driveListTitle;
     private ScrollView scrollView;
     private TextView fuelSystemStatus, fuelEconomy;
+
     private LineChart engineLoadChart;
+    private LineDataSet lineDataSet;
+    private LineData lineData;
 
     @Nullable
     @Override
@@ -163,27 +165,32 @@ public class HomeFragment extends Fragment {
         scrollView.requestLayout();
     }
 
-    //Change Fuel System Status
     public void setFuelSystemStatus(String status) { fuelSystemStatus.setText(status); }
 
-    //Change Fuel Economy Value
-    public void setFuelEconomy (int val) { fuelEconomy.setText(val + "L/100 KM"); }
+    public void setFuelEconomy (double val) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        fuelEconomy.setText(df.format(val) + "L/100 KM");
+    }
 
-    //populate Line chart for Engine Load
     public void populateEngineLoadChart() {
+        if(messages.size() == 0) {
+            return;
+        }
 
         engineLoadChart.setPinchZoom(false);
         engineLoadChart.setDragEnabled(false);
         engineLoadChart.setScaleEnabled(false);
 
-        ArrayList <Entry> yValues = new ArrayList<>();
+        ArrayList <Entry> values = new ArrayList<>();
 
-        yValues.add(new Entry (0 ,1 ));
-        yValues.add(new Entry (1 ,3 ));
-        yValues.add(new Entry (2 ,5 ));
+        for(int i = 0; i < messages.size(); i++) {
+            ProcessedMessage message = messages.get(i);
+            Double val = (Double) message.getValues().get("THROTTLE_POSITION");
 
+            values.add(new Entry(i,val.floatValue()));
+        }
 
-        LineDataSet lineDataSet = new LineDataSet(yValues, "Data Set 1");
+        lineDataSet = new LineDataSet(values, "Data Set 1");
         lineDataSet.setLineWidth(3);
         lineDataSet.setValueTextSize(0);
         lineDataSet.setDrawFilled(true);
@@ -194,14 +201,8 @@ public class HomeFragment extends Fragment {
         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         lineDataSet.setDrawCircles(false);
 
-
-        ArrayList <ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(lineDataSet);
-
-        LineData lineData = new LineData(dataSets);
-
+        lineData = new LineData(lineDataSet);
         engineLoadChart.setData(lineData);
-
     }
 
     public void setupBluetoothConnection() {
@@ -256,7 +257,9 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<List<ProcessedMessage>>() {
             @Override
             public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
+                Log.d(TAG, "Getting data for: " + drive.getId());
                 messages = response.body();
+                Log.d(TAG, "Got previous data: " + messages.size() + " messages");
                 populateValues();
             }
 
@@ -269,5 +272,24 @@ public class HomeFragment extends Fragment {
 
     private void populateValues() {
         populateEngineLoadChart();
+        redrawChart();
+        setFuelSystemStatus(messages.get(0).getValues().get("FUEL_SYSTEM_STATUS").toString());
+
+        double fuelEcon = (double) messages.get(0).getValues().get("FUEL_ECONOMY");
+        setFuelEconomy(fuelEcon);
     }
+
+    private void redrawChart() {
+        if(lineData == null) {
+            return;
+        }
+
+        engineLoadChart.post(() -> {
+            lineData.notifyDataChanged();
+            engineLoadChart.notifyDataSetChanged();
+            engineLoadChart.invalidate();
+        });
+
+    }
+
 }
