@@ -23,4 +23,5 @@
     <string name="previous_drive">Previous Drive</string>
     <string name="date">Date</string>
     <string name="system_status">System Status</string>
+    <string name="mass_air_flow">Mass Air Flow</string>
 </resources>
