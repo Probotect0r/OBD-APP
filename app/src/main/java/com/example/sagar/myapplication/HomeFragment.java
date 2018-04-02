@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment {
     private Chronometer clock;
     private TextView driveListTitle;
     private ScrollView scrollView;
-    private TextView fuelSystemStatus, fuelEconomy;
+    private TextView fuelSystemStatus, fuelEconomy, dateTitle;
 
     private LineChart engineLoadChart;
     private LineDataSet lineDataSet;
@@ -82,6 +82,7 @@ public class HomeFragment extends Fragment {
         fuelSystemStatus = view.findViewById(R.id.txtFuelSystemValue);
         fuelEconomy = view.findViewById(R.id.txtFuelEconomy);
         engineLoadChart = view.findViewById(R.id.homeEngineLoadChart);
+        dateTitle = view.findViewById(R.id.txtDriveHomeDate);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) { return view; }
