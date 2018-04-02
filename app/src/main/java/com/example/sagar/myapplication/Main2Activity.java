@@ -73,6 +73,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
         startActivity(showTempActivity);
     }
 
+
     public void showFuelPressure (View view) {
         Intent showFuelPressure = new Intent (this, FuelPressure.class);
         startActivity(showFuelPressure);

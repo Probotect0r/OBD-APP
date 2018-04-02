@@ -35,9 +35,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DrivesByDate" />
         <activity android:name=".ViewErrorCodes" />
-        <activity android:name=".ThrottlePosition" />
-        <activity android:name=".MassAirFlow" />
-        <activity android:name=".FuelPressure"></activity>
+        <activity android:name=".ThrottlePosition"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".MassAirFlow"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".FuelPressure"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -36,7 +36,7 @@
         android:layout_marginTop="44dp"
         android:text="Coolant Temp"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <com.github.mikephil.charting.charts.BarChart
@@ -44,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp" />
 
 </RelativeLayout>

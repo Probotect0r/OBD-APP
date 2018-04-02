@@ -1,13 +1,69 @@
 package com.example.sagar.myapplication;
 
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
+import java.util.ArrayList;
 
 public class ThrottlePosition extends AppCompatActivity {
+
+    LineChart tpChart;
+    private LineDataSet lineDataSet;
+    private LineData lineData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_throttle_position);
+
+        tpChart = findViewById(R.id.tpChart);
+
+        showChartData();
+    }
+
+    public void showChartData() {
+        Description description = new Description();
+        description.setText("");
+
+        //chart Design
+        tpChart.setPinchZoom(true);
+        tpChart.setDragEnabled(true);
+        tpChart.setScaleEnabled(true);
+        tpChart.setDescription(description);
+        tpChart.getLegend().setEnabled(false);
+
+        //Add XY Coordinates
+        ArrayList<Entry> yValues = new ArrayList<>();
+        yValues.add(new Entry(0 , 1));
+        yValues.add(new Entry(1 , 3));
+        yValues.add(new Entry(2 , 5));
+
+        //SetUp line Design
+        lineDataSet = new LineDataSet(yValues, "data set 1");
+        lineDataSet.setLineWidth(3);
+        lineDataSet.setValueTextSize(0);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setCircleColor(Color.BLACK);
+        lineDataSet.setCircleRadius(4);
+        lineDataSet.setCircleHoleRadius(3);
+        lineDataSet.setHighLightColor(Color.RED);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setDrawCircles(false);
+        lineData = new LineData(lineDataSet);
+
+        //show Line Data
+        tpChart.setData(lineData);
+    }
+
+    public void backToHome(View view) {
+        finish();
     }
 }
