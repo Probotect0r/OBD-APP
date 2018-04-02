@@ -212,7 +212,7 @@ public class BluetoothThread implements Runnable {
             return call.execute().body();
         } catch (IOException e) {
             Log.e(TAG, "Could not execute call: ", e);
-            throw new RuntimeException("Could not execute call", e);
+            return null;
         }
     }
     public boolean isContinuePolling() {

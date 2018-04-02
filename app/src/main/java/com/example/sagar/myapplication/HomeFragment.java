@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -166,7 +167,10 @@ public class HomeFragment extends Fragment {
 
     public void setFuelSystemStatus(String status) { fuelSystemStatus.setText(status); }
 
-    public void setFuelEconomy (int val) { fuelEconomy.setText(val + "L/100 KM"); }
+    public void setFuelEconomy (double val) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        fuelEconomy.setText(df.format(val) + "L/100 KM");
+    }
 
     public void populateEngineLoadChart() {
         if(messages.size() == 0) {
@@ -270,6 +274,9 @@ public class HomeFragment extends Fragment {
         populateEngineLoadChart();
         redrawChart();
         setFuelSystemStatus(messages.get(0).getValues().get("FUEL_SYSTEM_STATUS").toString());
+
+        double fuelEcon = (double) messages.get(0).getValues().get("FUEL_ECONOMY");
+        setFuelEconomy(fuelEcon);
     }
 
     private void redrawChart() {
@@ -284,4 +291,5 @@ public class HomeFragment extends Fragment {
         });
 
     }
+
 }
