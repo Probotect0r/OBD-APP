@@ -1,10 +1,12 @@
 package com.example.sagar.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.example.sagar.myapplication.model.Drive;
 
@@ -78,5 +80,10 @@ public class DrivesByDate extends AppCompatActivity {
     private void loadDrivesIntoRecyclerView() {
         adapter = new HomeCardAdapter(recentDrives);
         recyclerView.setAdapter(adapter);
+    }
+
+    public void showDriveInfo(View view) {
+        Intent i = new Intent (this, RecentDriveInfo.class);
+        startActivity(i);
     }
 }
