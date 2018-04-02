@@ -101,6 +101,7 @@ public class HistoricalFragment extends Fragment {
                 Intent i = new Intent(getActivity(), DrivesByDate.class);
                 i.putExtra("date", date[0]);
                 startActivity(i);
+                Log.d(TAG, "onClick: Searching by Date");
             }
         });
 

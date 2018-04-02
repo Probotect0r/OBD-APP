@@ -62,6 +62,36 @@ public class RecentDriveInfo extends AppCompatActivity {
 
     }
 
+    public void showSpeedActivity(View view) {
+        Intent showFuelActivity = new Intent (this, SpeedRPMActivity.class);
+        startActivity(showFuelActivity);
+    }
+
+    public void showThrottlePosition (View view) {
+        Intent showThrottlePosition = new Intent (this, ThrottlePosition.class);
+        startActivity(showThrottlePosition);
+    }
+
+    public void showRpmActivity(View view) {
+        Intent showRPMActivity = new Intent (this, RpmActivity.class);
+        startActivity(showRPMActivity);
+    }
+
+    public void showTempActivity(View view) {
+        Intent showTempActivity = new Intent (this, TemperatureActivity.class);
+        startActivity(showTempActivity);
+    }
+
+    public void showFuelPressure (View view) {
+        Intent showFuelPressure = new Intent (this, FuelPressure.class);
+        startActivity(showFuelPressure);
+    }
+
+    public void showMAF (View view) {
+        Intent showMAF = new Intent (this, MassAirFlow.class);
+        startActivity(showMAF);
+    }
+
     public void loadErrorPage(View view) {
         Intent i = new Intent();
         startActivity(i);
