@@ -26,7 +26,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="9"
                 android:padding="5dp"
-                android:text="@string/recent_drive"
+                android:text="@string/previous_drive"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -45,54 +45,67 @@
                     android:foreground="?android:attr/selectableItemBackground"
                     app:cardCornerRadius="30dp">
 
-                    <android.support.constraint.ConstraintLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/imgFuelSystem"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:layout_marginBottom="16dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@drawable/bgcirclegrey"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_pump"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:text="Fuel System Status"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/imgFuelSystem"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            <ImageView
+                                android:id="@+id/imgFuelSystem"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="16dp"
+                                android:background="@drawable/bgcirclegrey"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_pump"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                        <TextView
-                            android:id="@+id/txtFuelSystemValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="24dp"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center"
-                            android:padding="5dp"
-                            android:text="Value"
-                            android:textColor="@android:color/darker_gray"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="8dp"
+                                android:text="Fuel System Status"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/imgFuelSystem"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal">
+
+                            <TextView
+                                android:id="@+id/txtFuelSystemValue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="24dp"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="Value"
+                                android:textColor="#000"
+                                android:textSize="16sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
 
@@ -110,54 +123,70 @@
                     android:foreground="?android:attr/selectableItemBackground"
                     app:cardCornerRadius="30dp">
 
-                    <android.support.constraint.ConstraintLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/imageView"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:layout_marginBottom="16dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@drawable/bgcirclepurple"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_fueleconomy"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/fuel_economy"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/imageView"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            <ImageView
+                                android:id="@+id/imageView"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_marginBottom="16dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="16dp"
+                                android:background="@drawable/bgcirclepurple"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_fueleconomy"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                        <TextView
-                            android:id="@+id/txtFuelEconomy"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="24dp"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center"
-                            android:padding="5dp"
-                            android:text="Value"
-                            android:textColor="@android:color/darker_gray"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/fuel_economy"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:layout_gravity="center"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/imageView"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtFuelEconomy"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="24dp"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="Value"
+                                android:textColor="#000"
+                                android:textSize="16sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
 
@@ -182,8 +211,8 @@
 
                         <ImageView
                             android:id="@+id/homeGraph"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_marginBottom="16dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
