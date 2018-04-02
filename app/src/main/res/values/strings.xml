@@ -22,4 +22,5 @@
     <string name="fuel_economy">Fuel Economy</string>
     <string name="previous_drive">Previous Drive</string>
     <string name="date">Date</string>
+    <string name="system_status">System Status</string>
 </resources>
