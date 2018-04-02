@@ -18,16 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.sagar.myapplication.model.Drive;
+import com.example.sagar.myapplication.model.ProcessedMessage;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
-import com.example.sagar.myapplication.model.Drive;
-import com.example.sagar.myapplication.model.ProcessedMessage;
-
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -67,7 +65,10 @@ public class HomeFragment extends Fragment {
     private TextView driveListTitle;
     private ScrollView scrollView;
     private TextView fuelSystemStatus, fuelEconomy;
+
     private LineChart engineLoadChart;
+    private LineDataSet lineDataSet;
+    private LineData lineData;
 
     @Nullable
     @Override
@@ -183,7 +184,7 @@ public class HomeFragment extends Fragment {
         yValues.add(new Entry (2 ,5 ));
 
 
-        LineDataSet lineDataSet = new LineDataSet(yValues, "Data Set 1");
+        lineDataSet = new LineDataSet(yValues, "Data Set 1");
         lineDataSet.setLineWidth(3);
         lineDataSet.setValueTextSize(0);
         lineDataSet.setDrawFilled(true);
@@ -194,14 +195,8 @@ public class HomeFragment extends Fragment {
         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         lineDataSet.setDrawCircles(false);
 
-
-        ArrayList <ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(lineDataSet);
-
-        LineData lineData = new LineData(dataSets);
-
+        lineData = new LineData(lineDataSet);
         engineLoadChart.setData(lineData);
-
     }
 
     public void setupBluetoothConnection() {
@@ -269,5 +264,15 @@ public class HomeFragment extends Fragment {
 
     private void populateValues() {
         populateEngineLoadChart();
+        redrawChart();
+    }
+
+    private void redrawChart() {
+        engineLoadChart.post(() -> {
+            lineData.notifyDataChanged();
+            engineLoadChart.notifyDataSetChanged();
+            engineLoadChart.invalidate();
+        });
+
     }
 }
