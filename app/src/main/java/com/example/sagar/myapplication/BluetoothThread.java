@@ -55,6 +55,7 @@ public class BluetoothThread implements Runnable {
         COMMANDS.put("FUEL_PRESSURE", "010A\r");
         COMMANDS.put("MAF", "0110\r");
         COMMANDS.put("FUEL_SYSTEM_STATUS", "0103\r");
+        COMMANDS.put("ERROR_CODES", "03\r");
     }
 
     public BluetoothThread(BluetoothDevice device) {
