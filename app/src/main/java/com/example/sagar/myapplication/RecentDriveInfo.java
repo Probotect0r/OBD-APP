@@ -75,4 +75,9 @@ public class RecentDriveInfo extends AppCompatActivity {
         showMAF.putExtra("yAxis", "g/s");
         startActivity(showMAF);
     }
+
+    public void loadErrorPage(View view) {
+        Intent showErrors = new Intent(this, ViewErrorCodes.class);
+        startActivity(showErrors);
+    }
 }
