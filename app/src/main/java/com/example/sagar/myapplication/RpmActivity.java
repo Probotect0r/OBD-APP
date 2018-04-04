@@ -3,6 +3,7 @@ package com.example.sagar.myapplication;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.example.sagar.myapplication.model.ProcessedMessage;
@@ -40,10 +41,9 @@ public class RpmActivity extends AppCompatActivity {
         getLastestMessages();
     }
 
-    private void getLastestMessages() {
-        Call<List<ProcessedMessage>> call = RestHelper.getLastTenMessages();
 
-        call.enqueue(new Callback<List<ProcessedMessage>>() {
+    private void getLastestMessages() {
+        Callback<List<ProcessedMessage>> callback = new Callback<List<ProcessedMessage>>() {
             @Override
             public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
                 messages = response.body();
@@ -51,10 +51,22 @@ public class RpmActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<ProcessedMessage>> call, Throwable t) {}
-        });
-    }
+            public void onFailure(Call<List<ProcessedMessage>> call, Throwable t) {
+                Log.e(TAG, "Error", t);
+            }
+        };
 
+        String driveId = getIntent().getStringExtra("driveId");
+        Log.d(TAG, "DriveId: " + driveId);
+        Call call;
+        if (driveId == null) {
+            call = RestHelper.getLastTenMessages();
+        } else {
+            call = RestHelper.getDataByDrive(driveId);
+        }
+
+        call.enqueue(callback);
+    }
     public void setupChart() {
 
         Description description = new Description();

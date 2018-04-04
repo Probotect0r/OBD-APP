@@ -32,17 +32,12 @@ import static android.content.ContentValues.TAG;
 
 public class HistoricalFragment extends Fragment {
 
-    private Retrofit retrofit;
-    private RetrieveService retrieveService;
-
     List<Drive> recentDrives;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
-    public HistoricalFragment() {
-        // Required empty public constructor
-    }
+    public HistoricalFragment() {}
 
 
     @Override
@@ -60,9 +55,7 @@ public class HistoricalFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        setupRetrofit();
         fetchRecentDrives();
-
 
         //setup datepicker for date  queries
         DatePickerDialog.OnDateSetListener dateSetListener;
@@ -105,21 +98,11 @@ public class HistoricalFragment extends Fragment {
             }
         });
 
-        // Inflate the layout for this fragment
         return view;
     }
 
-    private void setupRetrofit() {
-        this.retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        this.retrieveService = retrofit.create(RetrieveService.class);
-    }
-
     private void fetchRecentDrives() {
-        Call<List<Drive>> call = this.retrieveService.getRecentDrives();
+        Call<List<Drive>> call = RestHelper.getRecentDrives();
         call.enqueue(new Callback<List<Drive>>() {
             @Override
             public void onResponse(Call<List<Drive>> call, Response<List<Drive>> response) {

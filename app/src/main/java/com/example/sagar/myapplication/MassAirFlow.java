@@ -47,21 +47,31 @@ public class MassAirFlow extends AppCompatActivity {
         getLastestMessages();
     }
 
-    private void getLastestMessages() {
-        Call<List<ProcessedMessage>> call = RestHelper.getLastTenMessages();
 
-        call.enqueue(new Callback<List<ProcessedMessage>>() {
+    private void getLastestMessages() {
+        Callback<List<ProcessedMessage>> callback = new Callback<List<ProcessedMessage>>() {
             @Override
             public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
                 messages = response.body();
-                Log.d(TAG, "Got messages: " + messages.size());
                 loadChart();
             }
 
             @Override
             public void onFailure(Call<List<ProcessedMessage>> call, Throwable t) {
+                Log.e(TAG, "Error", t);
             }
-        });
+        };
+
+        String driveId = getIntent().getStringExtra("driveId");
+        Log.d(TAG, "DriveId: " + driveId);
+        Call call;
+        if (driveId == null) {
+            call = RestHelper.getLastTenMessages();
+        } else {
+            call = RestHelper.getDataByDrive(driveId);
+        }
+
+        call.enqueue(callback);
     }
 
     public void setupChart() {

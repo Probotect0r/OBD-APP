@@ -3,6 +3,7 @@ package com.example.sagar.myapplication;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.example.sagar.myapplication.model.ProcessedMessage;
@@ -28,6 +29,8 @@ public class ThrottlePosition extends AppCompatActivity {
     private List<ProcessedMessage> messages;
     private final String KEY = "THROTTLE_POSITION";
 
+    private String TAG = "THROTTLE_POSITION";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +48,7 @@ public class ThrottlePosition extends AppCompatActivity {
     }
 
     private void getLastestMessages() {
-        Call<List<ProcessedMessage>> call = RestHelper.getLastTenMessages();
-
-        call.enqueue(new Callback<List<ProcessedMessage>>() {
+        Callback<List<ProcessedMessage>> callback = new Callback<List<ProcessedMessage>>() {
             @Override
             public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
                 messages = response.body();
@@ -55,8 +56,21 @@ public class ThrottlePosition extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<ProcessedMessage>> call, Throwable t) {}
-        });
+            public void onFailure(Call<List<ProcessedMessage>> call, Throwable t) {
+                Log.e(TAG, "Error", t);
+            }
+        };
+
+        String driveId = getIntent().getStringExtra("driveId");
+        Log.d(TAG, "DriveId: " + driveId);
+        Call call;
+        if (driveId == null) {
+            call = RestHelper.getLastTenMessages();
+        } else {
+            call = RestHelper.getDataByDrive(driveId);
+        }
+
+        call.enqueue(callback);
     }
 
     public void setupChart() {
