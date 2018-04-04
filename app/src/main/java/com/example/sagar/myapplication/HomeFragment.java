@@ -30,15 +30,13 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_CANCELED;
 
@@ -49,9 +47,6 @@ import static android.app.Activity.RESULT_CANCELED;
 public class HomeFragment extends Fragment {
     private BluetoothAdapter bluetoothAdapter;
     private static final String TAG = "MY_APP_DEBUG_TAG";
-
-    private Retrofit retrofit;
-    private RetrieveService retrieveService;
 
     private BluetoothThread thread;
     private BluetoothDevice bluetoothDevice;
@@ -103,8 +98,8 @@ public class HomeFragment extends Fragment {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) { return view; }
 
+        initializeChart();
         setupButtonListener();
-        setupRetrofit();
         enableBluetooth();
         return view;
     }
@@ -134,20 +129,37 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void initializeChart() {
+        engineLoadChart.setPinchZoom(false);
+        engineLoadChart.setDragEnabled(false);
+        engineLoadChart.setScaleEnabled(false);
+        engineLoadChart.setVisibleXRangeMaximum(15);
+
+        Description description = new Description();
+        description.setText("");
+        engineLoadChart.setDescription(description);
+        engineLoadChart.getLegend().setEnabled(false);
+
+        lineDataSet = new LineDataSet(new ArrayList(Arrays.asList(new Entry(0,0))), "");
+        lineDataSet.setLineWidth(3);
+        lineDataSet.setValueTextSize(0);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setCircleColor(Color.BLACK);
+        lineDataSet.setCircleRadius(4);
+        lineDataSet.setCircleHoleRadius(3);
+        lineDataSet.setHighLightColor(Color.RED);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setDrawCircles(false);
+
+        lineData = new LineData(lineDataSet);
+        engineLoadChart.setData(lineData);
+    }
+
     public void changeScrollViewWeight (int val) {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) scrollView
                 .getLayoutParams();
         layoutParams.weight = val;
         scrollView.requestLayout();
-    }
-
-    private void setupRetrofit() {
-        this.retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        this.retrieveService = retrofit.create(RetrieveService.class);
     }
 
     private void enableBluetooth() {
@@ -218,12 +230,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void queryPreviousDrive() {
-        Call<Drive> call = this.retrieveService.getLastDrive();
+        Call<Drive> call = RestHelper.getLastDrive();
         call.enqueue(new Callback<Drive>() {
             @Override
             public void onResponse(Call<Drive> call, Response<Drive> response) {
                 previousDrive = response.body();
-                getPreviousDriveData();
+                loadPreviousData();
             }
 
             @Override
@@ -233,15 +245,15 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void getPreviousDriveData() {
-        Call<List<ProcessedMessage>> call = this.retrieveService.getData(previousDrive.getId());
+    private void loadPreviousData() {
+        Call<List<ProcessedMessage>> call = RestHelper.getDataByDrive(previousDrive.getId());
         call.enqueue(new Callback<List<ProcessedMessage>>() {
             @Override
             public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
                 Log.d(TAG, "Getting data for: " + previousDrive.getId());
                 previousMessages = response.body();
                 Log.d(TAG, "Got previous data: " + previousMessages.size() + " messages");
-                populateValues();
+                populatePreviousData();
             }
 
             @Override
@@ -251,19 +263,15 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void populateValues() {
+    private void populatePreviousData() {
+        if(previousMessages.size() == 0) return;
+
         populateEngineLoadChartWithPreviousData();
         redrawChart();
         setFuelSystemStatus(previousMessages.get(0).getValues().get("FUEL_SYSTEM_STATUS").toString());
 
         Object econValue = previousMessages.get(0).getValues().get("FUEL_ECONOMY");
-        if(econValue.toString().equals("Infinity")) {
-            Log.d(TAG, "Infinity econ detected");
-            setFuelEconomy(12);
-        } else {
-            double fuelEcon = (double) econValue;
-            setFuelEconomy(fuelEcon);
-        }
+        loadEconomyValue(econValue);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy, h:mm a");
         String dateString = simpleDateFormat.format(previousDrive.getStart());
@@ -282,43 +290,21 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        engineLoadChart.setPinchZoom(false);
-        engineLoadChart.setDragEnabled(false);
-        engineLoadChart.setScaleEnabled(false);
-
-        Description description = new Description();
-        description.setText("");
-        engineLoadChart.setDescription(description);
-        engineLoadChart.getLegend().setEnabled(false);
-
+        engineLoadChart.setVisibleXRangeMaximum(15);
+        lineDataSet.clear();
         for(int i = 0; i < previousMessages.size(); i++) {
             ProcessedMessage message = previousMessages.get(i);
             Double val = (Double) message.getValues().get("THROTTLE_POSITION");
 
-            this.previousValues.add(new Entry(i,val.floatValue()));
+            lineDataSet.addEntry(new Entry(i,val.floatValue()));
         }
-
-        lineDataSet = new LineDataSet(this.previousValues, "Data Set 1");
-        lineDataSet.setLineWidth(3);
-        lineDataSet.setValueTextSize(0);
-        lineDataSet.setDrawFilled(true);
-        lineDataSet.setCircleColor(Color.BLACK);
-        lineDataSet.setCircleRadius(4);
-        lineDataSet.setCircleHoleRadius(3);
-        lineDataSet.setHighLightColor(Color.RED);
-        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        lineDataSet.setDrawCircles(false);
-
-        lineData = new LineData(lineDataSet);
-        engineLoadChart.setData(lineData);
+        redrawChart();
     }
 
     private void redrawChart() {
-        Log.d(TAG, "Redrawing chart");
         if(lineData == null) {
             return;
         }
-        Log.d(TAG, "Redrawing chart 2");
 
         engineLoadChart.post(() -> {
             lineData.notifyDataChanged();
@@ -328,28 +314,23 @@ public class HomeFragment extends Fragment {
     }
 
     private void pollCurrentData() {
+        engineLoadChart.setVisibleXRangeMaximum(100);
         lineDataSet.clear();
         pollingThread = new Thread(() -> {
             System.out.println("Started polling thread.");
             while (isDriving) {
-                Call<ProcessedMessage> call = this.retrieveService.getLatestMessage();
+                Call<ProcessedMessage> call = RestHelper.getLatestMessage();
                 call.enqueue(new Callback<ProcessedMessage>() {
 
                     @Override
                     public void onResponse(Call<ProcessedMessage> call, Response<ProcessedMessage> response) {
                         ProcessedMessage message = response.body();
                         Double val = (Double) message.getValues().get("THROTTLE_POSITION");
-                        lineDataSet.addEntry(new Entry(previousValues.size(), val.floatValue()));
+                        lineDataSet.addEntry(new Entry(lineDataSet.getValues().size(), val.floatValue()));
                         redrawChart();
 
                         Object econValue = message.getValues().get("FUEL_ECONOMY");
-                        if(econValue.toString().equals("Infinity")) {
-                            Log.d(TAG, "Infinity econ detected");
-                            setFuelEconomy(12);
-                        } else {
-                            double fuelEcon = (double) econValue;
-                            setFuelEconomy(fuelEcon);
-                        }
+                        loadEconomyValue(econValue);
 
                         setFuelSystemStatus(message.getValues().get("FUEL_SYSTEM_STATUS").toString());
                     }
@@ -364,8 +345,20 @@ public class HomeFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
+
+            loadPreviousData();
         });
 
         pollingThread.start();
+    }
+
+    private void loadEconomyValue(Object econValue) {
+        if(econValue.toString().equals("Infinity")) {
+            Log.d(TAG, "Infinity econ detected");
+            setFuelEconomy(12);
+        } else {
+            double fuelEcon = (double) econValue;
+            setFuelEconomy(fuelEcon);
+        }
     }
 }
