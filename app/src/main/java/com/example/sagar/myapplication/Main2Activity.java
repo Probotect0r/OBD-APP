@@ -107,6 +107,11 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
         startActivity(showMAF);
     }
 
+    public void showErrors(View view) {
+        Intent showErrors = new Intent(this, ViewErrorCodes.class);
+        startActivity(showErrors);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
