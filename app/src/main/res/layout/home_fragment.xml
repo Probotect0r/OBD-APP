@@ -76,7 +76,7 @@
                                 android:layout_marginBottom="5dp"
                                 android:layout_marginStart="8dp"
                                 android:layout_marginTop="16dp"
-                                android:background="@drawable/bgcirclegrey"
+                                android:background="@drawable/bgcirclered"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_pump"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -246,7 +246,7 @@
                             android:layout_marginTop="8dp"
                             android:background="@drawable/bgcircleyellow"
                             android:padding="10dp"
-                            android:src="@drawable/engineload"
+                            android:src="@drawable/ic_engine"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -358,7 +358,7 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclered"
                             android:padding="10dp"
-                            android:src="@drawable/engineload" />
+                            android:src="@drawable/ic_engine" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -458,7 +458,7 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcircleyellow"
                             android:padding="10dp"
-                            android:src="@drawable/ic_thermometer" />
+                            android:src="@drawable/ic_temp" />
 
                         <TextView
                             android:layout_width="wrap_content"

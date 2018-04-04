@@ -121,7 +121,7 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclered"
                             android:padding="10dp"
-                            android:src="@drawable/engineload" />
+                            android:src="@drawable/ic_engine" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -219,7 +219,7 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcircleyellow"
                             android:padding="10dp"
-                            android:src="@drawable/ic_thermometer" />
+                            android:src="@drawable/ic_temp" />
 
                         <TextView
                             android:layout_width="wrap_content"
