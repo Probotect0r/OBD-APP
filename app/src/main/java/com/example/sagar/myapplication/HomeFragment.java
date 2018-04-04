@@ -137,7 +137,6 @@ public class HomeFragment extends Fragment {
         engineLoadChart.setPinchZoom(false);
         engineLoadChart.setDragEnabled(false);
         engineLoadChart.setScaleEnabled(false);
-        engineLoadChart.setVisibleXRangeMaximum(10);
 
         Description description = new Description();
         description.setText("");
@@ -269,7 +268,6 @@ public class HomeFragment extends Fragment {
 
     private void populatePreviousData() {
         if(previousMessages.size() == 0) return;
-
         populateEngineLoadChartWithPreviousData();
         redrawChart();
         Object fuelStatus = previousMessages.get(0).getValues().get("FUEL_SYSTEM_STATUS");
@@ -301,7 +299,7 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        engineLoadChart.setVisibleXRangeMaximum(10);
+        engineLoadChart.setVisibleXRangeMaximum(previousMessages.size());
         lineDataSet.clear();
         for(int i = 0; i < previousMessages.size(); i++) {
             ProcessedMessage message = previousMessages.get(i);
@@ -357,7 +355,7 @@ public class HomeFragment extends Fragment {
                 }
             }
 
-            loadPreviousData();
+            queryPreviousDrive();
         });
 
         pollingThread.start();
