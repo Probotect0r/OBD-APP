@@ -179,6 +179,7 @@ public class HomeFragment extends Fragment {
         thread = new BluetoothThread(bluetoothDevice);
         new Thread(thread).start();
         startClock();
+        dateTitle.setVisibility(View.INVISIBLE);
         pollCurrentData();
     }
 
@@ -279,6 +280,7 @@ public class HomeFragment extends Fragment {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy, h:mm a");
         String dateString = simpleDateFormat.format(previousDrive.getStart());
         dateTitle.setText(dateString);
+        dateTitle.setVisibility(View.VISIBLE);
     }
 
     public void setFuelSystemStatus(Object status) {

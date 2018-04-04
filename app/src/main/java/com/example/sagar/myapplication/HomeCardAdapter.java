@@ -52,7 +52,6 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.ViewHo
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy");
         String dateString = simpleDateFormat.format(start);
-
         holder.txtDate.setText(dateString);
         holder.txtDuration.setText("30 seconds");
 
