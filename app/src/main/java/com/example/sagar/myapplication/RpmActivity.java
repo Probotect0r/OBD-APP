@@ -114,4 +114,8 @@ public class RpmActivity extends AppCompatActivity {
             chart.invalidate();
         });
     }
+
+    public void backToHome(View view) {
+        finish();
+    }
 }

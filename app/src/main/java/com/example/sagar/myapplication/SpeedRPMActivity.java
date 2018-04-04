@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.sagar.myapplication.model.ProcessedMessage;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
@@ -25,16 +25,27 @@ public class SpeedRPMActivity extends AppCompatActivity {
     private LineChart chart;
     private LineDataSet lineDataSet;
     private LineData lineData;
+    private TextView title, xAxis, yAxis;
 
     private List<ProcessedMessage> messages;
 
-    private final String KEY = "SPEED";
+    private String KEY;
     private String TAG = "SpeedActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speed_rpm);
+
+        KEY = getIntent().getStringExtra("key");
+
+        title = findViewById(R.id.speed);
+        title.setText(getIntent().getStringExtra("title"));
+        xAxis = findViewById(R.id.xAxis);
+        xAxis.setText(getIntent().getStringExtra("xAxis"));
+        yAxis = findViewById(R.id.yAxis);
+        yAxis.setText(getIntent().getStringExtra("yAxis"));
 
         chart = findViewById(R.id.speedLineChart);
 
@@ -116,5 +127,9 @@ public class SpeedRPMActivity extends AppCompatActivity {
             chart.notifyDataSetChanged();
             chart.invalidate();
         });
+    }
+
+    public void backToHome(View view) {
+        finish();
     }
 }

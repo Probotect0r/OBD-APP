@@ -3,18 +3,7 @@ package com.example.sagar.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-
-import com.example.sagar.myapplication.model.ProcessedMessage;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecentDriveInfo extends AppCompatActivity {
     private static final String TAG = "MY_APP_DEBUG_TAG";
@@ -34,44 +23,56 @@ public class RecentDriveInfo extends AppCompatActivity {
 
     public void showSpeedActivity(View view) {
         Intent showFuelActivity = new Intent (this, SpeedRPMActivity.class);
-        showFuelActivity.putExtra("driveId", driveId);
+        showFuelActivity.putExtra("key", "SPEED");
+        showFuelActivity.putExtra("title", "Speed");
+        showFuelActivity.putExtra("xAxis", "Seconds");
+        showFuelActivity.putExtra("yAxis", "KM/H");
         startActivity(showFuelActivity);
     }
 
-
     public void showThrottlePosition (View view) {
-        Intent showThrottlePosition = new Intent (this, ThrottlePosition.class);
-        showThrottlePosition.putExtra("driveId", driveId);
+        Intent showThrottlePosition = new Intent (this, SpeedRPMActivity.class);
+        showThrottlePosition.putExtra("key", "THROTTLE_POSITION");
+        showThrottlePosition.putExtra("title", "Throttle Position");
+        showThrottlePosition.putExtra("xAxis", "Seconds");
+        showThrottlePosition.putExtra("yAxis", "%");
         startActivity(showThrottlePosition);
     }
 
     public void showRpmActivity(View view) {
-        Intent showRPMActivity = new Intent (this, RpmActivity.class);
-        showRPMActivity.putExtra("driveId", driveId);
+        Intent showRPMActivity = new Intent (this, SpeedRPMActivity.class);
+        showRPMActivity.putExtra("key", "RPM");
+        showRPMActivity.putExtra("title", "RPM");
+        showRPMActivity.putExtra("xAxis", "Seconds");
+        showRPMActivity.putExtra("yAxis", "RPM");
         startActivity(showRPMActivity);
     }
 
     public void showTempActivity(View view) {
-        Intent showTempActivity = new Intent (this, TemperatureActivity.class);
-        showTempActivity.putExtra("driveId", driveId);
+        Intent showTempActivity = new Intent (this, SpeedRPMActivity.class);
+        showTempActivity.putExtra("key", "COOLANT_TEMPERATURE");
+        showTempActivity.putExtra("title", "Coolant Temprature");
+        showTempActivity.putExtra("xAxis", "Seconds");
+        showTempActivity.putExtra("yAxis", "50&#x2103;C");
         startActivity(showTempActivity);
     }
 
+
     public void showFuelPressure (View view) {
-        Intent showFuelPressure = new Intent (this, FuelPressure.class);
-        showFuelPressure.putExtra("driveId", driveId);
+        Intent showFuelPressure = new Intent (this, SpeedRPMActivity.class);
+        showFuelPressure.putExtra("key", "FUEL_PRESSURE");
+        showFuelPressure.putExtra("title", "Fuel Pressure");
+        showFuelPressure.putExtra("xAxis", "Seconds");
+        showFuelPressure.putExtra("yAxis", "KPa");
         startActivity(showFuelPressure);
     }
 
     public void showMAF (View view) {
-        Intent showMAF = new Intent (this, MassAirFlow.class);
-        showMAF.putExtra("driveId", driveId);
+        Intent showMAF = new Intent (this, SpeedRPMActivity.class);
+        showMAF.putExtra("key", "MAF");
+        showMAF.putExtra("title", "Mass Air Flow");
+        showMAF.putExtra("xAxis", "Seconds");
+        showMAF.putExtra("yAxis", "g/s");
         startActivity(showMAF);
-    }
-
-    public void loadErrorPage(View view) {
-        Intent i = new Intent(this, ViewErrorCodes.class);
-        i.putExtra("driveId", driveId);
-        startActivity(i);
     }
 }

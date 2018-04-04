@@ -54,32 +54,56 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
 
     public void showSpeedActivity(View view) {
         Intent showFuelActivity = new Intent (this, SpeedRPMActivity.class);
+        showFuelActivity.putExtra("key", "SPEED");
+        showFuelActivity.putExtra("title", "Speed");
+        showFuelActivity.putExtra("xAxis", "Seconds");
+        showFuelActivity.putExtra("yAxis", "KM/H");
         startActivity(showFuelActivity);
     }
 
     public void showThrottlePosition (View view) {
-        Intent showThrottlePosition = new Intent (this, ThrottlePosition.class);
+        Intent showThrottlePosition = new Intent (this, SpeedRPMActivity.class);
+        showThrottlePosition.putExtra("key", "THROTTLE_POSITION");
+        showThrottlePosition.putExtra("title", "Throttle Position");
+        showThrottlePosition.putExtra("xAxis", "Seconds");
+        showThrottlePosition.putExtra("yAxis", "%");
         startActivity(showThrottlePosition);
     }
 
     public void showRpmActivity(View view) {
-        Intent showRPMActivity = new Intent (this, RpmActivity.class);
+        Intent showRPMActivity = new Intent (this, SpeedRPMActivity.class);
+        showRPMActivity.putExtra("key", "RPM");
+        showRPMActivity.putExtra("title", "RPM");
+        showRPMActivity.putExtra("xAxis", "Seconds");
+        showRPMActivity.putExtra("yAxis", "RPM");
         startActivity(showRPMActivity);
     }
 
     public void showTempActivity(View view) {
-        Intent showTempActivity = new Intent (this, TemperatureActivity.class);
+        Intent showTempActivity = new Intent (this, SpeedRPMActivity.class);
+        showTempActivity.putExtra("key", "COOLANT_TEMPERATURE");
+        showTempActivity.putExtra("title", "Coolant Temprature");
+        showTempActivity.putExtra("xAxis", "Seconds");
+        showTempActivity.putExtra("yAxis", "50&#x2103;C");
         startActivity(showTempActivity);
     }
 
 
     public void showFuelPressure (View view) {
-        Intent showFuelPressure = new Intent (this, FuelPressure.class);
+        Intent showFuelPressure = new Intent (this, SpeedRPMActivity.class);
+        showFuelPressure.putExtra("key", "FUEL_PRESSURE");
+        showFuelPressure.putExtra("title", "Fuel Pressure");
+        showFuelPressure.putExtra("xAxis", "Seconds");
+        showFuelPressure.putExtra("yAxis", "KPa");
         startActivity(showFuelPressure);
     }
 
     public void showMAF (View view) {
-        Intent showMAF = new Intent (this, MassAirFlow.class);
+        Intent showMAF = new Intent (this, SpeedRPMActivity.class);
+        showMAF.putExtra("key", "MAF");
+        showMAF.putExtra("title", "Mass Air Flow");
+        showMAF.putExtra("xAxis", "Seconds");
+        showMAF.putExtra("yAxis", "g/s");
         startActivity(showMAF);
     }
 
