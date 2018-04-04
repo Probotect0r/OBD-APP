@@ -25,4 +25,5 @@
     <string name="system_status">System Status</string>
     <string name="mass_air_flow">Mass Air Flow</string>
     <string name="error_and_fault_codes">Error and Fault Codes</string>
+    <string name="diagnostic_trouble_codes">Diagnostic Trouble Codes</string>
 </resources>

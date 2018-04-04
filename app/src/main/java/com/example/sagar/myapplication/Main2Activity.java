@@ -84,7 +84,7 @@ public class Main2Activity extends AppCompatActivity implements BottomNavigation
         showTempActivity.putExtra("key", "COOLANT_TEMPERATURE");
         showTempActivity.putExtra("title", "Coolant Temprature");
         showTempActivity.putExtra("xAxis", "Seconds");
-        showTempActivity.putExtra("yAxis", "50&#x2103;C");
+        showTempActivity.putExtra("yAxis", "Celcius");
         startActivity(showTempActivity);
     }
 

@@ -16,7 +16,7 @@
             android:id="@+id/txtErrorCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
+            android:text=""
             android:textStyle="bold"
             android:textSize="30sp"
             android:layout_margin="10dp"/>
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Description: "
+            android:text=""
             android:textSize="20sp"
             android:textStyle="bold" />
 
