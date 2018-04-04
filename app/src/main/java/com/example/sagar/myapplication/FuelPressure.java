@@ -3,8 +3,8 @@ package com.example.sagar.myapplication;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
+import com.example.sagar.myapplication.model.ProcessedMessage;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
@@ -12,42 +12,63 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FuelPressure extends AppCompatActivity {
 
-    LineChart fpChart;
+    private LineChart chart;
     private LineDataSet lineDataSet;
     private LineData lineData;
+
+    private List<ProcessedMessage> messages;
+
+    private final String KEY = "FUEL_PRESSURE";
+    private static final String TAG = "RpmActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fuel_pressure);
 
-        fpChart = findViewById(R.id.fpChart);
-
-        showChartData();
+        chart = findViewById(R.id.fpChart);
+        setupChart();
+        getLastestMessages();
     }
 
-    public void showChartData() {
+    private void getLastestMessages() {
+        Call<List<ProcessedMessage>> call = RestHelper.getLastTenMessages();
+
+        call.enqueue(new Callback<List<ProcessedMessage>>() {
+            @Override
+            public void onResponse(Call<List<ProcessedMessage>> call, Response<List<ProcessedMessage>> response) {
+                messages = response.body();
+                loadChart();
+            }
+
+            @Override
+            public void onFailure(Call<List<ProcessedMessage>> call, Throwable t) {}
+        });
+    }
+
+    public void setupChart() {
+
         Description description = new Description();
         description.setText("");
 
-        //chart Design
-        fpChart.setPinchZoom(true);
-        fpChart.setDragEnabled(true);
-        fpChart.setScaleEnabled(true);
-        fpChart.setDescription(description);
-        fpChart.getLegend().setEnabled(false);
+        chart.setDragEnabled(true);
+        chart.setPinchZoom(true);
+        chart.setDescription(description);
+        chart.getLegend().setEnabled(false);
 
-        //Add XY Coordinates
-        ArrayList<Entry> yValues = new ArrayList<>();
-        yValues.add(new Entry(0 , 1));
-        yValues.add(new Entry(1 , 3));
-        yValues.add(new Entry(2 , 5));
 
-        //SetUp line Design
-        lineDataSet = new LineDataSet(yValues, "data set 1");
+        ArrayList<Entry> values = new ArrayList<Entry>();
+        values.add(new Entry(0,0));
+
+        lineDataSet = new LineDataSet(values, "MAF Data");
         lineDataSet.setLineWidth(3);
         lineDataSet.setValueTextSize(0);
         lineDataSet.setDrawFilled(true);
@@ -57,13 +78,27 @@ public class FuelPressure extends AppCompatActivity {
         lineDataSet.setHighLightColor(Color.RED);
         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         lineDataSet.setDrawCircles(false);
-        lineData = new LineData(lineDataSet);
 
-        //show Line Data
-        fpChart.setData(lineData);
+        lineData = new LineData(lineDataSet);
+        chart.setData(lineData);
     }
 
-    public void backToHome(View view) {
-        finish();
+    private void loadChart() {
+        lineDataSet.clear();
+        for(int i = 0; i < messages.size(); i++) {
+            ProcessedMessage message = messages.get(i);
+            Double val = (Double) message.getValues().get(KEY);
+            lineDataSet.addEntry(new Entry(i, val.floatValue()));
+        }
+
+        redrawChart();
+    }
+
+    private void redrawChart() {
+        chart.post(() -> {
+            lineData.notifyDataChanged();
+            chart.notifyDataSetChanged();
+            chart.invalidate();
+        });
     }
 }

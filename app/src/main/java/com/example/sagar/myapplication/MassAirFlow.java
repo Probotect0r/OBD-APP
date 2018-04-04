@@ -34,9 +34,6 @@ public class MassAirFlow extends AppCompatActivity {
 
     private List<ProcessedMessage> messages;
 
-    private Retrofit retrofit;
-    private RetrieveService retrieveService;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,23 +43,12 @@ public class MassAirFlow extends AppCompatActivity {
         median = findViewById(R.id.txtMedianVal);
         chart = findViewById(R.id.mafChart);
 
-        setupRetrofit();
         setupChart();
         getLastestMessages();
-
-    }
-
-    private void setupRetrofit() {
-        this.retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        this.retrieveService = retrofit.create(RetrieveService.class);
     }
 
     private void getLastestMessages() {
-        Call<List<ProcessedMessage>> call = retrieveService.getLastTenMessages();
+        Call<List<ProcessedMessage>> call = RestHelper.getLastTenMessages();
 
         call.enqueue(new Callback<List<ProcessedMessage>>() {
             @Override
@@ -79,7 +65,6 @@ public class MassAirFlow extends AppCompatActivity {
     }
 
     public void setupChart() {
-
         Description description = new Description();
         description.setText("");
 
@@ -119,7 +104,6 @@ public class MassAirFlow extends AppCompatActivity {
     }
 
     private void redrawChart() {
-
         chart.post(() -> {
             lineData.notifyDataChanged();
             chart.notifyDataSetChanged();
