@@ -199,7 +199,6 @@ public class HomeFragment extends Fragment {
         long elapsedMills = SystemClock.elapsedRealtime() - clock.getBase();
     }
 
-
     @Override
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
         System.out.println("Activity Result" + reqCode);
@@ -274,8 +273,7 @@ public class HomeFragment extends Fragment {
         Object fuelStatus = previousMessages.get(0).getValues().get("FUEL_SYSTEM_STATUS");
         setFuelSystemStatus(fuelStatus);
 
-        Object econValue = previousMessages.get(0).getValues().get("FUEL_ECONOMY");
-        loadEconomyValue(econValue);
+        setFuelEconomyAverage();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy, h:mm a");
         String dateString = simpleDateFormat.format(previousDrive.getStart());
@@ -289,11 +287,6 @@ public class HomeFragment extends Fragment {
         } else {
             fuelSystemStatus.setText(status.toString());
         }
-    }
-
-    public void setFuelEconomy (double val) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        fuelEconomy.setText(df.format(val) + "L/100 KM");
     }
 
     public void populateEngineLoadChartWithPreviousData() {
@@ -341,7 +334,7 @@ public class HomeFragment extends Fragment {
                         redrawChart();
 
                         Object econValue = message.getValues().get("FUEL_ECONOMY");
-                        loadEconomyValue(econValue);
+                        setFuelEconomy(econValue);
 
                         setFuelSystemStatus(message.getValues().get("FUEL_SYSTEM_STATUS"));
                     }
@@ -363,17 +356,33 @@ public class HomeFragment extends Fragment {
         pollingThread.start();
     }
 
-    private void loadEconomyValue(Object econValue) {
-        if (econValue == null) {
-            setFuelEconomy(12);
-            return;
+    private void setFuelEconomyAverage() {
+        double total = 0;
+        double average;
+        for (ProcessedMessage p : previousMessages) {
+            total += getFuelEconValue(p.getValues().get("FUEL_ECONOMY"));
         }
-        if(econValue.toString().equals("Infinity")) {
-            Log.d(TAG, "Infinity econ detected");
-            setFuelEconomy(12);
+
+        average = total / previousMessages.size();
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        String text = "Average: " + df.format(average) + "L/100KM";
+        fuelEconomy.setText(text);
+    }
+
+    private void setFuelEconomy(Object econValue) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        Double val = getFuelEconValue(econValue);
+        String text = df.format(val) + "L/100KM";
+        fuelEconomy.setText(text);
+    }
+
+    private double getFuelEconValue(Object econValue) {
+        if (econValue == null || econValue.toString().equals("Infinity")) {
+            return 12.034;
         } else {
             double fuelEcon = (double) econValue;
-            setFuelEconomy(fuelEcon);
+            return fuelEcon;
         }
     }
 }
