@@ -43,7 +43,7 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/tpChart"
-        android:layout_width="395dp"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
