@@ -292,14 +292,14 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/speedCard"
+                    android:id="@+id/fuelPressureCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     app:cardCornerRadius="30dp"
-                    android:onClick="showSpeedActivity">
+                    android:onClick="showFuelPressure">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -312,13 +312,13 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclegreen"
                             android:padding="10dp"
-                            android:src="@drawable/ic_tools" />
+                            android:src="@drawable/ic_meter" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="@string/check_speed"
+                            android:text="Fuel Pressure"
                             android:textStyle="bold" />
 
                         <View
@@ -332,20 +332,20 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:text="Speed Graph"
+                            android:text="Check Fuel Pressure"
                             android:textColor="@android:color/darker_gray" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/throttlePositionCard"
+                    android:id="@+id/mafCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     app:cardCornerRadius="30dp"
-                    android:onClick="showThrottlePosition">
+                    android:onClick="showMAF">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -358,13 +358,13 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclered"
                             android:padding="10dp"
-                            android:src="@drawable/ic_engine" />
+                            android:src="@drawable/ic_airflow" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="@string/throttle_position"
+                            android:text="Mass Air Flow"
                             android:textStyle="bold" />
 
                         <View
@@ -378,7 +378,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:text="Position Details"
+                            android:text="Get MAF Info"
                             android:textColor="@android:color/darker_gray" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -492,14 +492,14 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/fuelPressureCard"
+                    android:id="@+id/speedCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     app:cardCornerRadius="30dp"
-                    android:onClick="showFuelPressure">
+                    android:onClick="showSpeedActivity">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -512,13 +512,13 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclegreen"
                             android:padding="10dp"
-                            android:src="@drawable/ic_meter" />
+                            android:src="@drawable/ic_tools" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Fuel Pressure"
+                            android:text="@string/check_speed"
                             android:textStyle="bold" />
 
                         <View
@@ -532,20 +532,20 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:text="Check Fuel Pressure"
+                            android:text="Speed Graph"
                             android:textColor="@android:color/darker_gray" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/mafCard"
+                    android:id="@+id/throttlePositionCard"
                     android:layout_width="160dp"
                     android:layout_height="190dp"
                     android:layout_margin="5dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     app:cardCornerRadius="30dp"
-                    android:onClick="showMAF">
+                    android:onClick="showThrottlePosition">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -558,13 +558,13 @@
                             android:layout_height="64dp"
                             android:background="@drawable/bgcirclered"
                             android:padding="10dp"
-                            android:src="@drawable/ic_airflow" />
+                            android:src="@drawable/ic_engine" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Mass Air Flow"
+                            android:text="@string/throttle_position"
                             android:textStyle="bold" />
 
                         <View
@@ -578,7 +578,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:text="Get MAF Info"
+                            android:text="Position Details"
                             android:textColor="@android:color/darker_gray" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
