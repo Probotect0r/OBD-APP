@@ -67,6 +67,7 @@ public class HomeFragment extends Fragment {
     private LineChart engineLoadChart;
     private LineDataSet lineDataSet;
     private LineData lineData;
+    private View spacer;
 
     public CardView speed, throttlePosition, rpm, coolantTemp, fuelPressure, maf;
 
@@ -86,6 +87,7 @@ public class HomeFragment extends Fragment {
         fuelEconomy = view.findViewById(R.id.txtFuelEconomy);
         engineLoadChart = view.findViewById(R.id.homeEngineLoadChart);
         dateTitle = view.findViewById(R.id.txtDriveHomeDate);
+        spacer = view.findViewById(R.id.spacer);
 
         //Feature Cards
         speed = view.findViewById(R.id.speedCard);
@@ -115,6 +117,7 @@ public class HomeFragment extends Fragment {
                     driveListTitle.setText("Current Drive");
                     changeScrollViewWeight(70);
                     clock.setVisibility(view.VISIBLE);
+                    spacer.setVisibility(View.VISIBLE);
                     startDrive();
 
                 } else {
@@ -123,6 +126,7 @@ public class HomeFragment extends Fragment {
                     driveListTitle.setText("Recent Drive");
                     clock.setVisibility(view.GONE);
                     changeScrollViewWeight(80);
+                    spacer.setVisibility(View.INVISIBLE);
                     stopDrive();
                 }
             }

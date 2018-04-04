@@ -19,7 +19,7 @@
             android:name=".TemperatureActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SpeedRPMActivity"
+            android:name=".LineChartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Main2Activity"

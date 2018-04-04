@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SpeedRPMActivity extends AppCompatActivity {
+public class LineChartActivity extends AppCompatActivity {
     private LineChart chart;
     private LineDataSet lineDataSet;
     private LineData lineData;

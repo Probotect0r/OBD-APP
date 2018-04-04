@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="100"
-    tools:context="com.example.sagar.myapplication.SpeedRPMActivity">
+    tools:context="com.example.sagar.myapplication.LineChartActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/appbar"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="40dp"
         android:layout_marginTop="39dp"
         android:text="Sample Text"
         android:textAlignment="center"

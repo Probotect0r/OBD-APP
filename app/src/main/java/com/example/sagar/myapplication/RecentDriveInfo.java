@@ -22,7 +22,7 @@ public class RecentDriveInfo extends AppCompatActivity {
 
 
     public void showSpeedActivity(View view) {
-        Intent showFuelActivity = new Intent (this, SpeedRPMActivity.class);
+        Intent showFuelActivity = new Intent (this, LineChartActivity.class);
         showFuelActivity.putExtra("key", "SPEED");
         showFuelActivity.putExtra("title", "Speed");
         showFuelActivity.putExtra("xAxis", "Seconds");
@@ -31,7 +31,7 @@ public class RecentDriveInfo extends AppCompatActivity {
     }
 
     public void showThrottlePosition (View view) {
-        Intent showThrottlePosition = new Intent (this, SpeedRPMActivity.class);
+        Intent showThrottlePosition = new Intent (this, LineChartActivity.class);
         showThrottlePosition.putExtra("key", "THROTTLE_POSITION");
         showThrottlePosition.putExtra("title", "Throttle Position");
         showThrottlePosition.putExtra("xAxis", "Seconds");
@@ -40,7 +40,7 @@ public class RecentDriveInfo extends AppCompatActivity {
     }
 
     public void showRpmActivity(View view) {
-        Intent showRPMActivity = new Intent (this, SpeedRPMActivity.class);
+        Intent showRPMActivity = new Intent (this, LineChartActivity.class);
         showRPMActivity.putExtra("key", "RPM");
         showRPMActivity.putExtra("title", "RPM");
         showRPMActivity.putExtra("xAxis", "Seconds");
@@ -49,7 +49,7 @@ public class RecentDriveInfo extends AppCompatActivity {
     }
 
     public void showTempActivity(View view) {
-        Intent showTempActivity = new Intent (this, SpeedRPMActivity.class);
+        Intent showTempActivity = new Intent (this, LineChartActivity.class);
         showTempActivity.putExtra("key", "COOLANT_TEMPERATURE");
         showTempActivity.putExtra("title", "Coolant Temprature");
         showTempActivity.putExtra("xAxis", "Seconds");
@@ -59,7 +59,7 @@ public class RecentDriveInfo extends AppCompatActivity {
 
 
     public void showFuelPressure (View view) {
-        Intent showFuelPressure = new Intent (this, SpeedRPMActivity.class);
+        Intent showFuelPressure = new Intent (this, LineChartActivity.class);
         showFuelPressure.putExtra("key", "FUEL_PRESSURE");
         showFuelPressure.putExtra("title", "Fuel Pressure");
         showFuelPressure.putExtra("xAxis", "Seconds");
@@ -68,7 +68,7 @@ public class RecentDriveInfo extends AppCompatActivity {
     }
 
     public void showMAF (View view) {
-        Intent showMAF = new Intent (this, SpeedRPMActivity.class);
+        Intent showMAF = new Intent (this, LineChartActivity.class);
         showMAF.putExtra("key", "MAF");
         showMAF.putExtra("title", "Mass Air Flow");
         showMAF.putExtra("xAxis", "Seconds");
