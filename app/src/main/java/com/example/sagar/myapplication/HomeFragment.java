@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
         engineLoadChart.setPinchZoom(false);
         engineLoadChart.setDragEnabled(false);
         engineLoadChart.setScaleEnabled(false);
-        engineLoadChart.setVisibleXRangeMaximum(15);
+        engineLoadChart.setVisibleXRangeMaximum(10);
 
         Description description = new Description();
         description.setText("");
@@ -268,7 +268,8 @@ public class HomeFragment extends Fragment {
 
         populateEngineLoadChartWithPreviousData();
         redrawChart();
-        setFuelSystemStatus(previousMessages.get(0).getValues().get("FUEL_SYSTEM_STATUS").toString());
+        Object fuelStatus = previousMessages.get(0).getValues().get("FUEL_SYSTEM_STATUS");
+        setFuelSystemStatus(fuelStatus);
 
         Object econValue = previousMessages.get(0).getValues().get("FUEL_ECONOMY");
         loadEconomyValue(econValue);
@@ -278,7 +279,13 @@ public class HomeFragment extends Fragment {
         dateTitle.setText(dateString);
     }
 
-    public void setFuelSystemStatus(String status) { fuelSystemStatus.setText(status); }
+    public void setFuelSystemStatus(Object status) {
+        if (status == null) {
+            fuelSystemStatus.setText("Good");
+        } else {
+            fuelSystemStatus.setText(status.toString());
+        }
+    }
 
     public void setFuelEconomy (double val) {
         DecimalFormat df = new DecimalFormat("#.##");
@@ -290,7 +297,7 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        engineLoadChart.setVisibleXRangeMaximum(15);
+        engineLoadChart.setVisibleXRangeMaximum(10);
         lineDataSet.clear();
         for(int i = 0; i < previousMessages.size(); i++) {
             ProcessedMessage message = previousMessages.get(i);
@@ -332,7 +339,7 @@ public class HomeFragment extends Fragment {
                         Object econValue = message.getValues().get("FUEL_ECONOMY");
                         loadEconomyValue(econValue);
 
-                        setFuelSystemStatus(message.getValues().get("FUEL_SYSTEM_STATUS").toString());
+                        setFuelSystemStatus(message.getValues().get("FUEL_SYSTEM_STATUS"));
                     }
 
                     @Override
@@ -353,6 +360,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadEconomyValue(Object econValue) {
+        if (econValue == null) {
+            setFuelEconomy(12);
+            return;
+        }
         if(econValue.toString().equals("Infinity")) {
             Log.d(TAG, "Infinity econ detected");
             setFuelEconomy(12);
