@@ -65,7 +65,6 @@ public class MassAirFlow extends AppCompatActivity {
     }
 
     public void setupChart() {
-
         Description description = new Description();
         description.setText("");
 

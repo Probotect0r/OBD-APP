@@ -48,7 +48,6 @@ import static android.app.Activity.RESULT_CANCELED;
 
 public class HomeFragment extends Fragment {
     private BluetoothAdapter bluetoothAdapter;
-    private UUID uuid = UUID.randomUUID();
     private static final String TAG = "MY_APP_DEBUG_TAG";
 
     private Retrofit retrofit;
@@ -58,9 +57,7 @@ public class HomeFragment extends Fragment {
     private BluetoothDevice bluetoothDevice;
 
     private Drive previousDrive;
-    private Drive currentDrive;
     private List<ProcessedMessage> previousMessages;
-    private List<ProcessedMessage> currentMessages;
 
     //    private final String BLUETOOTH_DEVICE = "sagarpi";
     private final String BLUETOOTH_DEVICE = "DESKTOP-46PD4HS";
@@ -109,7 +106,6 @@ public class HomeFragment extends Fragment {
         setupButtonListener();
         setupRetrofit();
         enableBluetooth();
-        queryPreviousDrive();
         return view;
     }
 
@@ -159,7 +155,8 @@ public class HomeFragment extends Fragment {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 1);
         } else {
-            setupBluetoothConnection();
+            queryPreviousDrive();
+            findBluetoothDevice();
         }
     }
 
@@ -192,13 +189,15 @@ public class HomeFragment extends Fragment {
         System.out.println("Activity Result" + reqCode);
         if (resultCode == RESULT_CANCELED) {
             System.out.println("Bluetooth not enabled.");
+            queryPreviousDrive();
         } else {
             System.out.println("Bluetooth enabled!");
-            setupBluetoothConnection();
+            queryPreviousDrive();
+            findBluetoothDevice();
         }
     }
 
-    public void setupBluetoothConnection() {
+    public void findBluetoothDevice() {
         Log.d(TAG, "Looking for bluetooth device.");
         Set<BluetoothDevice> pairedDevices = this.bluetoothAdapter.getBondedDevices();
 

@@ -40,8 +40,8 @@ public class BluetoothThread implements Runnable {
 
     private Drive drive;
 
-//    public static final String API_ADDRESS = "192.168.0.193";
-    public static final String API_ADDRESS = "138.197.167.62";
+    public static final String API_ADDRESS = "192.168.0.193";
+//    public static final String API_ADDRESS = "138.197.167.62";
 
 
     private static final Map<String, String> COMMANDS = new HashMap<>();
@@ -54,7 +54,6 @@ public class BluetoothThread implements Runnable {
         COMMANDS.put("COOLANT_TEMPERATURE", "0105\r");
         COMMANDS.put("FUEL_PRESSURE", "010A\r");
         COMMANDS.put("MAF", "0110\r");
-//        COMMANDS.put("FUEL_RATE", "015E\r");
         COMMANDS.put("FUEL_SYSTEM_STATUS", "0103\r");
     }
 
