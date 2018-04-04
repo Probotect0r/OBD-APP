@@ -49,11 +49,13 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.ViewHo
         String driveId = currentItem.getId();
         Date start = currentItem.getStart();
         Date end = currentItem.getEnd();
+        long duration = end.getTime() - start.getTime();
+        duration = duration/1000;
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy, h:mm a");
         String dateString = simpleDateFormat.format(start);
         holder.txtDate.setText(dateString);
-        holder.txtDuration.setText("30 seconds");
+        holder.txtDuration.setText(String.valueOf(duration) + " seconds");
 
         holder.itemView.setOnClickListener(view -> {
             Intent i = new Intent(view.getContext(), RecentDriveInfo.class);
