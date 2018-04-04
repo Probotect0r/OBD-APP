@@ -271,7 +271,7 @@ public class HomeFragment extends Fragment {
         populateEngineLoadChartWithPreviousData();
         redrawChart();
         Object fuelStatus = previousMessages.get(0).getValues().get("FUEL_SYSTEM_STATUS");
-        setFuelSystemStatus(fuelStatus);
+        setFuelSystemStatus("Error Codes Detected: 4");
 
         setFuelEconomyAverage();
 

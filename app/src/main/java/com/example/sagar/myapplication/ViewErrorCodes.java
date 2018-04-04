@@ -21,10 +21,9 @@ public class ViewErrorCodes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_error_codes);
 
-        errors.add(new ErrorCard("1", "ABCD"));
-        errors.add(new ErrorCard("2", "ABCD"));
-        errors.add(new ErrorCard("3", "ABCD"));
-        errors.add(new ErrorCard("4", "ABCD"));
+        errors.add(new ErrorCard("P0014", "Incorrect CamShaft Timing or failed timing valve"));
+        errors.add(new ErrorCard("P000F", "Fuel Pressure sensor malfunction or Fuel Volume Regulator failure"));
+        errors.add(new ErrorCard("P002D", "Incorrect or contaminated oil in use."));
 
         recyclerView = findViewById(R.id.errorCardsRecyclerView);
         recyclerView.setHasFixedSize(true);
