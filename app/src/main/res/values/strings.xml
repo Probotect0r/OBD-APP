@@ -1,4 +1,29 @@
 <resources>
     <string name="app_name">Vehicle Analytics</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main2">Vehicle Analytics</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="begin_drive">Begin Drive</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="stop_drive">Stop Drive</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_time">Select Time</string>
+    <string name="search_drive">Search Drive</string>
+    <string name="record_drive">Record Drive</string>
+    <string name="error_and_faults">Error And Faults</string>
+    <string name="check_speed">Check Speed</string>
+    <string name="search_drives_by_date">Search Drives by Date</string>
+    <string name="throttle_position">Throttle Position</string>
+    <string name="recent_drive">Recent Drive</string>
+    <string name="fuel_economy">Fuel Economy</string>
+    <string name="previous_drive">Previous Drive</string>
+    <string name="date">Date</string>
+    <string name="system_status">System Status</string>
+    <string name="mass_air_flow">Mass Air Flow</string>
+    <string name="error_and_fault_codes">Error and Fault Codes</string>
+    <string name="diagnostic_trouble_codes">Diagnostic Trouble Codes</string>
 </resources>

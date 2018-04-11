@@ -13,21 +13,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".RpmActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TemperatureActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LineChartActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RPM.RpmActivity"
+        <activity
+            android:name=".RecentDriveInfo"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".DrivesByDate" />
+        <activity android:name=".ViewErrorCodes" />
+        <activity android:name=".ThrottlePosition"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".TemperatureActivity"
+        <activity android:name=".MassAirFlow"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".RPM.SpeedRPMActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".FuelPressure"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -4,25 +4,25 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import com.example.sagar.myapplication.model.Drive;
+import com.example.sagar.myapplication.model.RawMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by sagar on 11/25/17.
  */
 
-public class BluetoothThread extends Thread {
+public class BluetoothThread implements Runnable {
     // The UUID of the SerialPort bluetooth service
     UUID SERIAL_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
@@ -38,10 +38,25 @@ public class BluetoothThread extends Thread {
     private Retrofit retrofit;
     private PostService postService;
 
-//    public static final String API_ADDRESS = "192.168.0.17";
+    private Drive drive;
+
+//    public static final String API_ADDRESS = "192.168.0.193";
     public static final String API_ADDRESS = "138.197.167.62";
 
-    private static final List<String> COMMANDS = new ArrayList<>(Arrays.asList("010C\r", "0111\r", "010D\r"));
+
+    private static final Map<String, String> COMMANDS = new HashMap<>();
+
+    static {
+        COMMANDS.put("RPM", "010C\r");
+        COMMANDS.put("THROTTLE_POSITION", "0111\r");
+        COMMANDS.put("ENGINE_LOAD", "0104\r");
+        COMMANDS.put("SPEED", "010D\r");
+        COMMANDS.put("COOLANT_TEMPERATURE", "0105\r");
+        COMMANDS.put("FUEL_PRESSURE", "010A\r");
+        COMMANDS.put("MAF", "0110\r");
+        COMMANDS.put("FUEL_SYSTEM_STATUS", "0103\r");
+        COMMANDS.put("ERROR_CODES", "03\r");
+    }
 
     public BluetoothThread(BluetoothDevice device) {
         this.bluetoothDevice = device;
@@ -50,22 +65,24 @@ public class BluetoothThread extends Thread {
 
     private void setupRetrofit() {
         this.retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + this.API_ADDRESS + ":8080/")
-                .addConverterFactory(JacksonConverterFactory.create())
+                .baseUrl("http://" + BluetoothThread.API_ADDRESS + ":8080/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         this.postService = retrofit.create(PostService.class);
     }
 
     public void run() {
+        Log.d(TAG, "BluetoothThread started.");
         setupBluetoothSocket();
         setupInputStream();
         setupOutputStream();
         connectToSocket();
-        pollDevice();
+        createNewDrive();
     }
 
     private void setupBluetoothSocket() {
+        Log.d(TAG, "Setting up Bluetooth.");
         try {
             this.bluetoothSocket = this.bluetoothDevice.createRfcommSocketToServiceRecord(SERIAL_UUID);
         } catch (IOException err) {
@@ -100,24 +117,38 @@ public class BluetoothThread extends Thread {
         }
     }
 
+    private void createNewDrive() {
+        Log.d(TAG, "Creating new Drive.");
+        Call<Drive> call = this.postService.createDrive();
+        drive = executeCall(call);
+        Log.d(TAG, "Created drive with id: " + drive.getId());
+        pollDevice();
+    }
+
     private void pollDevice() {
         while(this.continuePolling) {
             this.executeCommandsOnSystem();
             this.sleep();
         }
+        closeSocket();
+        endDrive();
     }
 
     private void executeCommandsOnSystem() {
-        for (String command : COMMANDS) {
-            writeCommand(command);
+        RawMessage rawMessage = new RawMessage();
+        rawMessage.setDriveId(this.drive.getId());
+
+        for (String commandKey : COMMANDS.keySet()) {
+            writeCommand(COMMANDS.get(commandKey));
             String response = getStringFromInputStream();
-            if (response != "") {
-                sendMessageToServer(response);
-            }
+            Log.d(TAG, commandKey + ": " + response);
+            rawMessage.addMessageValue(commandKey, response);
         }
+
+        sendMessageToServer(rawMessage);
     }
 
-    public void writeCommand(String command) {
+    private void writeCommand(String command) {
         try {
             outputStream.write(command.getBytes());
             flushOutputstream();
@@ -126,7 +157,7 @@ public class BluetoothThread extends Thread {
         }
     }
 
-    public String getStringFromInputStream() {
+    private String getStringFromInputStream() {
         StringBuilder response = new StringBuilder();
 
         while (true) {
@@ -154,19 +185,9 @@ public class BluetoothThread extends Thread {
         }
     }
 
-    private void sendMessageToServer(String message) {
-        RawMessage rawMessage = new RawMessage(message);
+    private void sendMessageToServer(RawMessage rawMessage) {
         Call<RawMessage> call = this.postService.createMessage(rawMessage);
-        call.enqueue(new Callback<RawMessage>() {
-            @Override
-            public void onResponse(Call<RawMessage> call, Response<RawMessage> response) {}
-
-            @Override
-            public void onFailure(Call<RawMessage> call, Throwable t) {
-                Log.e(TAG, "Error sending message to server: " + t);
-            }
-        });
-
+        executeCall(call);
     }
 
     private void sleep() {
@@ -175,7 +196,6 @@ public class BluetoothThread extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     private void flushOutputstream() {
@@ -187,11 +207,41 @@ public class BluetoothThread extends Thread {
 
     }
 
+    private <T> T executeCall(Call<T> call) {
+        try {
+            return call.execute().body();
+        } catch (IOException e) {
+            Log.e(TAG, "Could not execute call: ", e);
+            return null;
+        }
+    }
     public boolean isContinuePolling() {
         return continuePolling;
     }
 
     public synchronized void setContinuePolling(boolean continuePolling) {
         this.continuePolling = continuePolling;
+    }
+
+    private void closeSocket() {
+        try {
+            bluetoothSocket.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error closing socket", e);
+        }
+    }
+
+    private void endDrive() {
+        Log.d(TAG, "Ending drive.");
+        Call<Drive> call = this.postService.endDrive(drive.getId());
+        executeCall(call);
+    }
+
+    public Drive getDrive() {
+        return drive;
+    }
+
+    public void setDrive(Drive drive) {
+        this.drive = drive;
     }
 }

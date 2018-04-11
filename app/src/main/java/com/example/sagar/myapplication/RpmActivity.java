@@ -6,20 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.example.sagar.myapplication.EngineLoad.EngineLoadService;
-import com.example.sagar.myapplication.EngineLoad.LoadMessage;
 import com.example.sagar.myapplication.model.ProcessedMessage;
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +19,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class TemperatureActivity extends AppCompatActivity {
+public class RpmActivity extends AppCompatActivity {
 
     private LineChart chart;
     private LineDataSet lineDataSet;
@@ -38,16 +28,15 @@ public class TemperatureActivity extends AppCompatActivity {
 
     private List<ProcessedMessage> messages;
 
-    private final String KEY = "COOLANT_TEMPERATURE";
+    private final String KEY = "RPM";
     private static final String TAG = "RpmActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temprature);
+        setContentView(R.layout.activity_rpm);
 
-        chart = findViewById(R.id.temperatureChart);
-
+        chart = findViewById(R.id.lineChart);
         setupChart();
         getLastestMessages();
     }
@@ -78,7 +67,6 @@ public class TemperatureActivity extends AppCompatActivity {
 
         call.enqueue(callback);
     }
-
     public void setupChart() {
 
         Description description = new Description();
@@ -127,5 +115,7 @@ public class TemperatureActivity extends AppCompatActivity {
         });
     }
 
+    public void backToHome(View view) {
+        finish();
+    }
 }
-
